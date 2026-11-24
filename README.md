@@ -1,7 +1,7 @@
 # AI-Based Skill Gap Analyzer
 ### An Intelligent Career Skill Assessment & Recommendation System
 
-[![CI Pipeline](https://github.com/your-username/skill-gap-analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/skill-gap-analyzer/actions)
+[![CI Pipeline](https://github.com/SarthakBagasi/Skill-Gap-Analyzer/actions/workflows/ci.yml/badge.svg)](https://github.com/SarthakBagasi/Skill-Gap-Analyzer/actions)
 ![Python](https://img.shields.io/badge/Python-3.11+-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js&logoColor=white)
@@ -134,8 +134,8 @@ Run both the frontend and backend services in isolated containers:
 
 ```bash
 # Clone the repository
-git clone https://github.com/<your-username>/skill-gap-analyzer.git
-cd skill-gap-analyzer
+git clone https://github.com/SarthakBagasi/Skill-Gap-Analyzer.git
+cd Skill-Gap-Analyzer
 
 # Build and start services
 docker-compose up --build
