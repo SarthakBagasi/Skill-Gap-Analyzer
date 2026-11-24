@@ -1,0 +1,303 @@
+[
+  {
+    "id": "backend_developer",
+    "title": "Backend Developer",
+    "description": "Designs, implements, and maintains robust server-side APIs, database schemas, and microservice architectures.",
+    "requirements": [
+      {
+        "skill_id": "python",
+        "weight": 0.18,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Core backend scripting and application development language."
+      },
+      {
+        "skill_id": "fastapi",
+        "weight": 0.16,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "High-throughput asynchronous REST API routing and request validation."
+      },
+      {
+        "skill_id": "postgresql",
+        "weight": 0.15,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Relational data modeling, ACID transactions, and query optimization."
+      },
+      {
+        "skill_id": "docker",
+        "weight": 0.12,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Containerizing backend services for reproducible deployments."
+      },
+      {
+        "skill_id": "rest_api",
+        "weight": 0.12,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "RESTful resource design, HTTP status conventions, and OpenAPI specs."
+      },
+      {
+        "skill_id": "redis",
+        "weight": 0.09,
+        "importance": "Important",
+        "min_threshold": 0.55,
+        "description": "Distributed cache layer to minimize database load and accelerate responses."
+      },
+      {
+        "skill_id": "git",
+        "weight": 0.08,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Collaborative version control and feature branch workflows."
+      },
+      {
+        "skill_id": "unit_testing",
+        "weight": 0.10,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Automated testing fixtures, test-driven development, and regressions safety."
+      }
+    ]
+  },
+  {
+    "id": "data_scientist",
+    "title": "Data Scientist",
+    "description": "Extracts actionable predictive insights from complex datasets using statistical modeling, feature engineering, and machine learning.",
+    "requirements": [
+      {
+        "skill_id": "python",
+        "weight": 0.18,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Primary data manipulation and statistical programming language."
+      },
+      {
+        "skill_id": "pandas",
+        "weight": 0.16,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Structured data cleaning, transformations, joins, and aggregations."
+      },
+      {
+        "skill_id": "numpy",
+        "weight": 0.12,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Vectorized computations, matrix operations, and array manipulation."
+      },
+      {
+        "skill_id": "scikit_learn",
+        "weight": 0.16,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Training classification, regression, clustering models, and cross-validation."
+      },
+      {
+        "skill_id": "statistics_probability",
+        "weight": 0.14,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Hypothesis testing, distributions, significance testing, and experimental design."
+      },
+      {
+        "skill_id": "sql",
+        "weight": 0.12,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Complex analytical queries, window functions, and data extraction."
+      },
+      {
+        "skill_id": "data_visualization",
+        "weight": 0.12,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Communicating trends, correlations, and model metrics to stakeholders."
+      }
+    ]
+  },
+  {
+    "id": "ml_engineer",
+    "title": "Machine Learning Engineer",
+    "description": "Bridges the gap between data science and scalable systems by deploying, optimizing, and monitoring deep learning and ML models in production.",
+    "requirements": [
+      {
+        "skill_id": "python",
+        "weight": 0.15,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Base language for ML research and pipeline engineering."
+      },
+      {
+        "skill_id": "pytorch",
+        "weight": 0.18,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Building and fine-tuning neural network architectures and autograd computations."
+      },
+      {
+        "skill_id": "machine_learning",
+        "weight": 0.14,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Loss functions, gradient descent optimization, regularization, and model validation."
+      },
+      {
+        "skill_id": "mlops",
+        "weight": 0.15,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Model registry, experiment tracking, versioning, and continuous model deployment."
+      },
+      {
+        "skill_id": "docker",
+        "weight": 0.12,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Packaging models into containerized microservices for GPU/CPU inference."
+      },
+      {
+        "skill_id": "fastapi",
+        "weight": 0.10,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Low-latency REST inference servers for model scoring."
+      },
+      {
+        "skill_id": "nlp",
+        "weight": 0.08,
+        "importance": "Nice to Have",
+        "min_threshold": 0.55,
+        "description": "Text embedding representations, sequence modeling, and language applications."
+      },
+      {
+        "skill_id": "data_structures_algorithms",
+        "weight": 0.08,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Optimizing algorithmic complexity and throughput for large-scale data ingestion."
+      }
+    ]
+  },
+  {
+    "id": "fullstack_developer",
+    "title": "Full Stack Developer",
+    "description": "Develops seamless end-to-end web applications across modern interactive frontends and scalable backend APIs.",
+    "requirements": [
+      {
+        "skill_id": "typescript",
+        "weight": 0.16,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Type-safe modern application code on both client and server."
+      },
+      {
+        "skill_id": "react",
+        "weight": 0.16,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Component hierarchy, reactive state hooks, and client UX."
+      },
+      {
+        "skill_id": "nextjs",
+        "weight": 0.14,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Server-side rendering, routing, server actions, and fullstack orchestration."
+      },
+      {
+        "skill_id": "nodejs",
+        "weight": 0.14,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Backend services, asynchronous I/O, and server middleware."
+      },
+      {
+        "skill_id": "postgresql",
+        "weight": 0.12,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Structured persistent relational storage and schema design."
+      },
+      {
+        "skill_id": "tailwind_css",
+        "weight": 0.10,
+        "importance": "Important",
+        "min_threshold": 0.55,
+        "description": "Rapid modern UI styling and responsive web layouts."
+      },
+      {
+        "skill_id": "rest_api",
+        "weight": 0.10,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "API contracts, JSON communication, and endpoint security."
+      },
+      {
+        "skill_id": "git",
+        "weight": 0.08,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Version control, code review branches, and collaboration."
+      }
+    ]
+  },
+  {
+    "id": "cloud_devops_engineer",
+    "title": "Cloud & DevOps Engineer",
+    "description": "Automates continuous integration, infrastructure provisioning, and production cloud operations with high reliability.",
+    "requirements": [
+      {
+        "skill_id": "docker",
+        "weight": 0.18,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Standardized container packaging and multi-stage build optimization."
+      },
+      {
+        "skill_id": "kubernetes",
+        "weight": 0.18,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Cluster orchestration, pod auto-scaling, ingress controllers, and configs."
+      },
+      {
+        "skill_id": "ci_cd",
+        "weight": 0.16,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Building robust automated test and release pipelines."
+      },
+      {
+        "skill_id": "linux",
+        "weight": 0.14,
+        "importance": "Must Have",
+        "min_threshold": 0.65,
+        "description": "Kernel parameters, process debugging, shell administration, and systemd."
+      },
+      {
+        "skill_id": "aws",
+        "weight": 0.14,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Core cloud infrastructure: VPC, IAM, EC2, S3, and load balancers."
+      },
+      {
+        "skill_id": "terraform",
+        "weight": 0.12,
+        "importance": "Important",
+        "min_threshold": 0.60,
+        "description": "Declarative Infrastructure-as-Code state management and module creation."
+      },
+      {
+        "skill_id": "monitoring_observability",
+        "weight": 0.08,
+        "importance": "Nice to Have",
+        "min_threshold": 0.55,
+        "description": "Prometheus metric alerts, Grafana dashboards, and system health telemetry."
+      }
+    ]
+  }
+]

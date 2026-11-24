@@ -1,0 +1,377 @@
+[
+  {
+    "skill_id": "fastapi",
+    "title": "Production REST APIs with FastAPI & Pydantic",
+    "objective": "Build and document high-performance, asynchronous RESTful APIs with automated OpenAPI schemas and request validation.",
+    "topics": ["Path & Query Parameters", "Pydantic Schemas & Data Validation", "Dependency Injection System", "OAuth2 Password & JWT Authentication", "Async SQLAlchemy Integration", "Pytest Async Client Testing"],
+    "official_docs": "https://fastapi.tiangolo.com/",
+    "practice_tasks": [
+      "Implement a CRUD API for a bookstore with input validation using Pydantic v2.",
+      "Integrate JWT authentication middleware with role-based access control (Admin vs User).",
+      "Write async test suites using httpx and pytest-asyncio with >85% code coverage."
+    ],
+    "artifacts": "A containerized, self-documenting FastAPI microservice with PostgreSQL database migrations (Alembic) and GitHub Actions CI workflow.",
+    "estimated_hours": 20,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "python",
+    "title": "Modern Pythonic Programming & Type Annotations",
+    "objective": "Master idiomatic Python 3.11+ features, generator pipelines, type hinting, and OOP patterns for production systems.",
+    "topics": ["Type Annotations & Mypy", "Context Managers & Decorators", "Generators & Iterators", "Concurrency (asyncio & threading)", "Error Handling & Logging", "Virtual Environments & Poetry/Pipenv"],
+    "official_docs": "https://docs.python.org/3/",
+    "practice_tasks": [
+      "Build a custom file parser using generators and context managers to stream large log files without memory exhaustion.",
+      "Create reusable function decorators for caching, latency timing, and exponential backoff retry.",
+      "Refactor a legacy script into a clean, typed package passing strict mypy checks."
+    ],
+    "artifacts": "A standalone CLI utility published with pyproject.toml, full unit test suite, and semantic versioning.",
+    "estimated_hours": 18,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "postgresql",
+    "title": "Advanced PostgreSQL & Relational Database Engineering",
+    "objective": "Design normalized relational schemas, write high-performance indexed queries, and manage transaction isolation.",
+    "topics": ["3NF Normalization & Constraints", "B-Tree vs GIN/GiST Indexing", "EXPLAIN ANALYZE Query Plans", "ACID Transactions & Row Locking", "Window Functions & CTEs", "Connection Pooling (pgbouncer)"],
+    "official_docs": "https://www.postgresql.org/docs/",
+    "practice_tasks": [
+      "Design an e-commerce schema with inventory, orders, and payment audit tables using foreign keys and check constraints.",
+      "Optimize an unindexed slow join query using EXPLAIN ANALYZE, reducing query execution time by 80%.",
+      "Write transactional stored procedures ensuring inventory is atomically decremented during checkout."
+    ],
+    "artifacts": "Production schema migration repository with schema diagrams (ERD) and benchmarked query performance reports.",
+    "estimated_hours": 22,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "docker",
+    "title": "Containerization with Docker & Multi-Stage Builds",
+    "objective": "Containerize full-stack services with minimal image sizes, non-root users, and multi-service docker-compose orchestration.",
+    "topics": ["Dockerfile Directives & Layer Caching", "Multi-stage Builds for Go/Node/Python", "Volume Mounts & Persistent Storage", "Docker Compose Networking", "Container Security & Non-root Execution", "Healthchecks & Resource Limits"],
+    "official_docs": "https://docs.docker.com/get-started/",
+    "practice_tasks": [
+      "Write a multi-stage Dockerfile for a Next.js/FastAPI application reducing image size from 1GB to under 120MB.",
+      "Orchestrate a multi-container stack (API, PostgreSQL, Redis) with healthchecks and volume persistence in docker-compose.yml.",
+      "Configure container security scanning with Trivy and eliminate root user execution."
+    ],
+    "artifacts": "A production-ready docker-compose application template with environment variable segregation and zero-vulnerability container images.",
+    "estimated_hours": 15,
+    "difficulty": "Beginner"
+  },
+  {
+    "skill_id": "rest_api",
+    "title": "Enterprise RESTful Architecture & API Contract Design",
+    "objective": "Design clean, scalable RESTful web APIs adhering to HTTP standards, semantic status codes, and hypermedia principles.",
+    "topics": ["HTTP Methods & Idempotency", "Resource-Oriented URI Design", "Pagination, Filtering, and Sorting Patterns", "Error Response Standards (RFC 7807)", "Rate Limiting & Throttling", "Swagger/OpenAPI 3.0 Documentation"],
+    "official_docs": "https://restfulapi.net/",
+    "practice_tasks": [
+      "Design an API contract using OpenAPI 3.0 YAML specifying schemas, request bodies, and error response codes.",
+      "Implement cursor-based pagination and parameter filtering for a high-volume activity stream endpoint.",
+      "Add standardized error handling returning machine-readable problem details (RFC 7807)."
+    ],
+    "artifacts": "A published OpenAPI interactive Swagger documentation specification alongside a mock server implementation.",
+    "estimated_hours": 12,
+    "difficulty": "Beginner"
+  },
+  {
+    "skill_id": "redis",
+    "title": "Distributed In-Memory Caching & Messaging with Redis",
+    "objective": "Accelerate server responses through caching strategies and implement rate limiters and pub/sub message brokers.",
+    "topics": ["Key-Value, Hashes, Sets, Sorted Sets", "Cache-Aside, Write-Through, Write-Back", "TTL Eviction Policies (LRU/LFU)", "Distributed Locks (Redlock)", "Redis Pub/Sub & Streams", "Rate Limiting Algorithms (Token Bucket)"],
+    "official_docs": "https://redis.io/documentation",
+    "practice_tasks": [
+      "Implement a sliding-window rate limiter in Python/Node using Redis Sorted Sets to restrict API client requests.",
+      "Set up a cache-aside layer over database query results with automatic cache invalidation on updates.",
+      "Build a live broadcast notification channel using Redis Pub/Sub."
+    ],
+    "artifacts": "A benchmarked caching proxy demonstrating 10x throughput enhancement on high-cardinality database queries.",
+    "estimated_hours": 14,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "git",
+    "title": "Collaborative Git, Rebasing & Trunk-Based Development",
+    "objective": "Execute clean version control workflows, resolve complex merge conflicts, and manage branch releases professionally.",
+    "topics": ["Interactive Rebase & Squash", "Git Bisect for Bug Hunting", "Cherry-picking & Stashing", "Merge Strategies (Fast-forward, 3-way)", "Semantic Commit Conventions", "Pull Request Reviews & CODEOWNERS"],
+    "official_docs": "https://git-scm.com/doc",
+    "practice_tasks": [
+      "Use interactive rebase (`git rebase -i`) to clean up a messy feature branch into 3 atomic, semantic commits.",
+      "Locate the exact commit introducing a regression in a sample repository using automated `git bisect run`.",
+      "Simulate and resolve conflicting upstream changes between two active feature branches."
+    ],
+    "artifacts": "A well-structured GitHub repository exhibiting conventional commits, automated PR validation workflows, and release tags.",
+    "estimated_hours": 10,
+    "difficulty": "Beginner"
+  },
+  {
+    "skill_id": "unit_testing",
+    "title": "Automated Testing, Mocking & Test-Driven Development (TDD)",
+    "objective": "Build comprehensive test suites using fixtures, dependency mocks, and regression safety mechanisms.",
+    "topics": ["Unit vs Integration vs E2E Tests", "Pytest Fixtures & Parametrization", "Mocking Network & Database Calls (unittest.mock)", "Code Coverage Analysis (coverage.py)", "Contract Testing", "TDD Red-Green-Refactor Cycle"],
+    "official_docs": "https://docs.pytest.org/",
+    "practice_tasks": [
+      "Write unit tests for a financial calculation engine using parameterized test inputs covering edge cases.",
+      "Mock an external third-party payment gateway API in integration tests without making live network calls.",
+      "Achieve >90% branch coverage on a service module verified by automated CI coverage gates."
+    ],
+    "artifacts": "A fully tested Python service module accompanied by coverage badges, mutation test reports, and automated CI tests.",
+    "estimated_hours": 16,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "pytorch",
+    "title": "Deep Learning Architecture Engineering with PyTorch",
+    "objective": "Design, train, and evaluate deep neural networks, custom loss functions, and data loaders using PyTorch.",
+    "topics": ["Tensors, Autograd & Computational Graphs", "Custom Dataset & DataLoader pipelines", "Transfer Learning & Fine-Tuning", "Loss Functions & Optimizers (AdamW, Cosine Annealing)", "Model Checkpointing & Early Stopping", "GPU Acceleration (CUDA / MPS)"],
+    "official_docs": "https://pytorch.org/docs/stable/index.html",
+    "practice_tasks": [
+      "Construct a convolutional neural network (CNN) or Transformer encoder from scratch using torch.nn modules.",
+      "Fine-tune a pretrained Vision or Language model on a specialized custom dataset with validation early stopping.",
+      "Profile GPU memory allocation and implement mixed-precision training (`torch.cuda.amp`)."
+    ],
+    "artifacts": "A trained PyTorch model weights artifact along with training/validation loss curves and evaluation classification reports.",
+    "estimated_hours": 30,
+    "difficulty": "Advanced"
+  },
+  {
+    "skill_id": "mlops",
+    "title": "MLOps, Experiment Tracking & Model Serving",
+    "objective": "Automate machine learning experiment tracking, model registry management, and production inference deployment.",
+    "topics": ["Experiment Tracking with MLflow/Weights&Biases", "Model Artifact Versioning & Model Registry", "REST / gRPC Inference Server Packaging", "Data & Concept Drift Monitoring", "Feature Stores Overview", "CI/CD for Machine Learning (CT/CD)"],
+    "official_docs": "https://mlflow.org/docs/latest/index.html",
+    "practice_tasks": [
+      "Track hyperparameters, training metrics, and model artifacts across 5 training runs with MLflow.",
+      "Package a PyTorch model into a Dockerized inference microservice with Prometheus latency metrics.",
+      "Simulate incoming inference distribution shifts and detect feature drift using Evidently AI / statistical tests."
+    ],
+    "artifacts": "An automated MLOps pipeline repository linking Git commits to model versions, registry promotions, and live inference endpoints.",
+    "estimated_hours": 25,
+    "difficulty": "Advanced"
+  },
+  {
+    "skill_id": "machine_learning",
+    "title": "Foundational Machine Learning & Statistical Learning",
+    "objective": "Implement supervised and unsupervised statistical learning algorithms, feature engineering, and cross-validation.",
+    "topics": ["Bias-Variance Tradeoff", "Linear & Logistic Regression", "Decision Trees & Random Forests / Gradient Boosting (XGBoost)", "Cross-Validation & Hyperparameter Tuning (Optuna)", "Feature Scaling & One-Hot/Target Encoding", "Precision, Recall, ROC-AUC, F1-Score"],
+    "official_docs": "https://scikit-learn.org/stable/",
+    "practice_tasks": [
+      "Build an end-to-end classification pipeline with scikit-learn including custom imputation and scaling transforms.",
+      "Perform cross-validated hyperparameter search using Optuna on XGBoost to maximize F1-score on imbalanced data.",
+      "Compute and analyze confusion matrices, ROC-AUC curves, and feature importance SHAP values."
+    ],
+    "artifacts": "A documented Jupyter notebook and modular Python pipeline demonstrating end-to-end model training, validation, and interpretability.",
+    "estimated_hours": 24,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "pandas",
+    "title": "Data Wrangling & Exploratory Analysis with Pandas",
+    "objective": "Perform high-performance structured tabular data cleaning, aggregations, reshaping, and time-series manipulations.",
+    "topics": ["DataFrames & Series Indexing", "Handling Missing Data & Imputation", "GroupBy Aggregations & Pivot Tables", "Merging, Joining & Concatenating DataFrames", "Vectorized String & Date Operations", "Memory Optimization (Downcasting & Categoricals)"],
+    "official_docs": "https://pandas.pydata.org/docs/",
+    "practice_tasks": [
+      "Clean a raw, messy 500,000-row transactional dataset resolving missing values, incorrect dtypes, and duplicates.",
+      "Compute rolling metrics, cohort retention rates, and multi-level group summaries.",
+      "Optimize dataframe memory footprint by converting object columns to categorical and downcasting integer types."
+    ],
+    "artifacts": "An exploratory data analysis (EDA) report with reproducible data transformation pipelines and summary metrics.",
+    "estimated_hours": 16,
+    "difficulty": "Beginner"
+  },
+  {
+    "skill_id": "numpy",
+    "title": "Vectorized Numerical Computing with NumPy",
+    "objective": "Leverage multidimensional array operations, linear algebra primitives, and broadcasting for high-throughput computing.",
+    "topics": ["N-Dimensional Arrays & Dtypes", "Array Slicing, Strides & Views vs Copies", "Broadcasting Rules & Vectorization", "Matrix Multiplication & Linear Algebra (np.linalg)", "Random Sampling & Probability Distributions", "Performance Profiling vs Pure Python"],
+    "official_docs": "https://numpy.org/doc/stable/",
+    "practice_tasks": [
+      "Implement cosine similarity and Euclidean distance vectorially for 10,000 embedding pairs without Python loops.",
+      "Implement a 2D convolution kernel filter from scratch using array slicing and broadcasting.",
+      "Benchmark vectorized array operations against native Python loops demonstrating 50x-100x speedups."
+    ],
+    "artifacts": "A standalone Python package of vectorized mathematical routines complete with unit tests and benchmark charts.",
+    "estimated_hours": 12,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "scikit_learn",
+    "title": "Production Machine Learning Pipelines with Scikit-Learn",
+    "objective": "Construct clean, leakage-free machine learning pipelines with ColumnTransformer, Pipeline, and custom estimators.",
+    "topics": ["Pipeline & ColumnTransformer Architecture", "Preventing Data Leakage in Cross-Validation", "Custom Transformers via BaseEstimator & TransformerMixin", "Ensemble Methods (Bagging, Boosting, Stacking)", "Model Evaluation Metrics & Threshold Tuning", "Model Serialization & Pickle/Joblib Best Practices"],
+    "official_docs": "https://scikit-learn.org/stable/modules/compose.html",
+    "practice_tasks": [
+      "Construct a composite Pipeline that transforms categorical, numerical, and text features simultaneously.",
+      "Create a custom transformer that calculates domain-specific financial ratios during cross-validation folds.",
+      "Save and validate a trained pipeline artifact with joblib, verifying deterministic prediction output."
+    ],
+    "artifacts": "A packaged, reproducible scikit-learn pipeline module ready for deployment into microservice inference endpoints.",
+    "estimated_hours": 20,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "statistics_probability",
+    "title": "Statistical Foundations for Data Science & A/B Testing",
+    "objective": "Apply inferential statistics, probability distributions, confidence intervals, and hypothesis tests to real-world decisions.",
+    "topics": ["Probability Distributions (Normal, Binomial, Poisson)", "Central Limit Theorem & Law of Large Numbers", "Hypothesis Testing (t-tests, ANOVA, Chi-Square)", "p-values, Type I / Type II Errors, Statistical Power", "A/B Testing Sample Size Determination", "Bayesian vs Frequentist Inference"],
+    "official_docs": "https://docs.scipy.org/doc/scipy/reference/stats.html",
+    "practice_tasks": [
+      "Perform a two-sample t-test and calculate confidence intervals for conversion rate differences in an A/B test.",
+      "Determine required sample size for 80% statistical power at alpha = 0.05 given an expected minimum detectable effect (MDE).",
+      "Conduct a Chi-Square test of independence on categorical user survey responses."
+    ],
+    "artifacts": "An executive A/B test decision-support memorandum complete with power analysis, distribution plots, and risk bounds.",
+    "estimated_hours": 18,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "sql",
+    "title": "Mastering Analytical SQL & Query Optimization",
+    "objective": "Compose complex analytical queries utilizing window functions, recursive CTEs, and query optimization techniques.",
+    "topics": ["Window Functions (ROW_NUMBER, RANK, DENSE_RANK, LAG/LEAD)", "Common Table Expressions (CTEs) & Recursive Queries", "Subqueries vs Correlated Subqueries vs Joins", "Aggregations & GROUPING SETS / ROLLUP", "Query Execution Plans & Index Usage", "Database Partitioning Principles"],
+    "official_docs": "https://mode.com/sql-tutorial/",
+    "practice_tasks": [
+      "Calculate 7-day rolling active users and cumulative revenue using SQL window functions.",
+      "Write a recursive CTE to traverse hierarchical managerial reporting relationships.",
+      "Refactor a multi-subquery analytical query into an optimized CTE that uses available table indexes."
+    ],
+    "artifacts": "A collection of solved real-world analytical SQL challenges with explanations of index usage and query cost reductions.",
+    "estimated_hours": 15,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "data_visualization",
+    "title": "Data Visualization & Storytelling with Matplotlib/Seaborn",
+    "objective": "Create clear, aesthetically refined statistical charts communicating key empirical trends without visual clutter.",
+    "topics": ["Visual Hierarchy & Tufte Principles", "Distribution Plots (Histograms, KDEs, Box & Violin Plots)", "Relational Plots (Scatter, Pairplots, Heatmaps)", "Categorical Plots & Bar Ordering", "Custom Styling, Colors, and Figure Subplots", "Exporting High-Resolution Publication Figures"],
+    "official_docs": "https://seaborn.pydata.org/",
+    "practice_tasks": [
+      "Construct a multi-panel figure displaying distribution spreads, correlation heatmaps, and outlier thresholds.",
+      "Design a publication-ready line chart with custom annotations pointing out key change events.",
+      "Implement a color-blind friendly custom theme applied consistently across all dashboard visuals."
+    ],
+    "artifacts": "A multi-page statistical data visual brief presenting experimental results with annotated callouts and cohesive styling.",
+    "estimated_hours": 12,
+    "difficulty": "Beginner"
+  },
+  {
+    "skill_id": "kubernetes",
+    "title": "Container Orchestration with Kubernetes (K8s)",
+    "objective": "Deploy, scale, and manage resilient microservices using Kubernetes Pods, Deployments, Services, and Ingress.",
+    "topics": ["Pods, Deployments, and ReplicaSets", "ClusterIP, NodePort, and LoadBalancer Services", "ConfigMaps & Secrets Management", "Ingress Controllers & Path-based Routing", "Horizontal Pod Autoscaler (HPA)", "Liveness & Readiness Probes"],
+    "official_docs": "https://kubernetes.io/docs/home/",
+    "practice_tasks": [
+      "Write Kubernetes manifests for a 3-replica backend deployment with environment variables and secrets.",
+      "Configure an Ingress resource with path routing directing traffic to backend and frontend services.",
+      "Set up readiness and liveness health probes and simulate zero-downtime rolling updates."
+    ],
+    "artifacts": "A production-grade Kubernetes manifest bundle (or Helm chart) configured for zero-downtime canary deployments.",
+    "estimated_hours": 24,
+    "difficulty": "Advanced"
+  },
+  {
+    "skill_id": "ci_cd",
+    "title": "Automated CI/CD Pipelines with GitHub Actions",
+    "objective": "Implement automated build, test, lint, and deployment workflows triggered on code pushes and pull requests.",
+    "topics": ["Workflow Triggers & Job Matrix", "Action Runners & Caching Dependencies", "Secret Management in CI", "Automated Linting, Type Checking & Testing", "Docker Image Build & Push to Container Registries", "Environment Deployment Gates & Approvals"],
+    "official_docs": "https://docs.github.com/en/actions",
+    "practice_tasks": [
+      "Write a GitHub Actions workflow that runs flake8, mypy, and pytest on every pull request.",
+      "Implement dependency caching for pip/npm speeding up CI build times by over 60%.",
+      "Configure automated multi-architecture Docker image builds pushed to GitHub Container Registry (GHCR)."
+    ],
+    "artifacts": "A modular, reusable CI/CD pipeline template with badge indicators, test coverage gates, and automated releases.",
+    "estimated_hours": 14,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "linux",
+    "title": "Linux Systems Administration & Shell Automation",
+    "objective": "Navigate Linux operating systems, manage systemd services, inspect system processes, and configure permissions.",
+    "topics": ["File Permissions (chmod, chown) & POSIX ACLs", "Process Monitoring (ps, top, htop, kill)", "Systemd Service Creation & Journalctl Logging", "Networking Diagnostics (curl, netstat, ss, ip, dig)", "Package Management (apt, yum, dnf)", "Cron Jobs & Scheduled Automation"],
+    "official_docs": "https://ubuntu.com/server/docs",
+    "practice_tasks": [
+      "Configure a custom systemd unit file that auto-restarts a Python daemon on crash.",
+      "Diagnose port binding conflicts and analyze network connectivity using `ss -tulpn` and `curl -iv`.",
+      "Write a Bash automation script that monitors disk usage and rotates application logs when thresholds exceed 85%."
+    ],
+    "artifacts": "A hardened Linux server deployment configuration script ready for automated bootstrapping on cloud instances.",
+    "estimated_hours": 16,
+    "difficulty": "Beginner"
+  },
+  {
+    "skill_id": "typescript",
+    "title": "Type-Safe Full-Stack Engineering with TypeScript",
+    "objective": "Build robust, error-resistant applications leveraging TypeScript's advanced type system, generics, and unions.",
+    "topics": ["Interfaces, Types & Discriminated Unions", "Generics & Generic Constraints", "Utility Types (Partial, Pick, Omit, Record)", "Type Narrowing & Custom Type Guards", "Configuring tsconfig.json for Strictness", "Zod Schema Validation & Inferred Types"],
+    "official_docs": "https://www.typescriptlang.org/docs/",
+    "practice_tasks": [
+      "Define discriminated union types modeling complex API response states (Idle, Loading, Success, Error).",
+      "Implement a generic API request client that infers response body types strictly from endpoint signatures.",
+      "Integrate Zod runtime parsing to guarantee incoming JSON data matches TypeScript compile-time types."
+    ],
+    "artifacts": "A strictly typed TypeScript utility library featuring comprehensive type tests via `tsd` or `vitest`.",
+    "estimated_hours": 18,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "react",
+    "title": "Modern Reactive Web Interfaces with React",
+    "objective": "Develop interactive single-page user interfaces utilizing React components, custom hooks, and state management.",
+    "topics": ["Functional Components & JSX", "useState, useEffect, useMemo, useCallback", "Custom Hook Extraction & Composition", "Context API & Component Trees", "Performance Optimization & React DevTools", "Controlled vs Uncontrolled Forms"],
+    "official_docs": "https://react.dev/",
+    "practice_tasks": [
+      "Build an interactive data table component featuring sorting, filtering, and pagination without third-party table libraries.",
+      "Create a custom `useDebounce` and `useFetch` hook handling loading, cancellation, and error states.",
+      "Optimize an expensive rendering tree using `React.memo` and `useCallback` to avoid unnecessary re-renders."
+    ],
+    "artifacts": "A component design system library published with Storybook documentation and automated accessibility testing.",
+    "estimated_hours": 20,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "nextjs",
+    "title": "Full-Stack Web Development with Next.js App Router",
+    "objective": "Architect high-performance web applications using Server Components, Server Actions, and dynamic routing in Next.js.",
+    "topics": ["App Router Hierarchy & Layouts", "React Server Components vs Client Components", "Server Actions for Form Submissions & Mutations", "Dynamic Route Segments & Route Handlers", "Streaming UI with Suspense & Loading states", "Static vs Dynamic Rendering Optimization"],
+    "official_docs": "https://nextjs.org/docs",
+    "practice_tasks": [
+      "Implement an authenticated dashboard using Server Components for instant data loading and Client Components for interactivity.",
+      "Create Server Actions with optimistic UI updates and Zod validation.",
+      "Stream slow analytical widgets independently using React Suspense boundaries."
+    ],
+    "artifacts": "A full-stack Next.js production web app deployed with SEO optimization, server-side caching, and sub-second load times.",
+    "estimated_hours": 22,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "nlp",
+    "title": "Applied Natural Language Processing & Text Embeddings",
+    "objective": "Extract structured information from unstructured text documents using tokenization, spaCy NLP pipelines, and sentence embeddings.",
+    "topics": ["Tokenization, Lemmatization & POS Tagging", "Named Entity Recognition (NER)", "Rule-Based Matching (PhraseMatcher)", "Vector Space Models & TF-IDF", "Sentence-BERT & Semantic Embeddings", "Cosine Similarity Ranking"],
+    "official_docs": "https://spacy.io/usage",
+    "practice_tasks": [
+      "Build a custom spaCy extraction pipeline that extracts technical competencies and years of experience from resumes.",
+      "Generate dense text representations using Sentence-BERT (`all-MiniLM-L6-v2`) and cluster document paragraphs.",
+      "Implement an explainable semantic search function that scores query similarity against a knowledge base."
+    ],
+    "artifacts": "A standalone NLP text classification and entity extraction microservice with automated benchmark metrics.",
+    "estimated_hours": 22,
+    "difficulty": "Intermediate"
+  },
+  {
+    "skill_id": "data_structures_algorithms",
+    "title": "Data Structures, Algorithms & Algorithmic Complexity",
+    "objective": "Analyze and implement fundamental data structures and algorithmic patterns with optimal Big-O time and space complexity.",
+    "topics": ["Arrays, Linked Lists, Stacks & Queues", "Trees, Binary Search Trees, Heaps & Tries", "Graph Traversals (BFS, DFS, Dijkstra)", "Sorting & Searching Algorithms", "Dynamic Programming & Memoization", "Asymptotic Analysis (Big-O, Big-Theta)"],
+    "official_docs": "https://en.wikipedia.org/wiki/Introduction_to_Algorithms",
+    "practice_tasks": [
+      "Implement a Trie data structure supporting prefix auto-complete queries with O(L) lookup time.",
+      "Solve classic shortest-path and cycle detection problems on directed graphs using BFS and DFS.",
+      "Implement memoized dynamic programming solutions for knapsack and longest common subsequence problems."
+    ],
+    "artifacts": "A rigorously tested algorithmic problem-solving repository with documented time/space complexity proofs.",
+    "estimated_hours": 28,
+    "difficulty": "Intermediate"
+  }
+]

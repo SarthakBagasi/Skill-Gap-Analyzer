@@ -1,0 +1,490 @@
+[
+  {
+    "id": "python",
+    "name": "Python",
+    "category": "Languages",
+    "aliases": ["python3", "py", "cpython"],
+    "prerequisites": [],
+    "description": "High-level, versatile programming language used in backend development, data science, and automation."
+  },
+  {
+    "id": "javascript",
+    "name": "JavaScript",
+    "category": "Languages",
+    "aliases": ["js", "es6", "ecmascript"],
+    "prerequisites": [],
+    "description": "Core scripting language of the web for client-side and server-side execution."
+  },
+  {
+    "id": "typescript",
+    "name": "TypeScript",
+    "category": "Languages",
+    "aliases": ["ts"],
+    "prerequisites": ["javascript"],
+    "description": "Statically typed superset of JavaScript adding compile-time type safety."
+  },
+  {
+    "id": "java",
+    "name": "Java",
+    "category": "Languages",
+    "aliases": ["jvm", "core java", "java 17", "java 21"],
+    "prerequisites": ["object_oriented_programming"],
+    "description": "Enterprise-grade class-based, object-oriented programming language."
+  },
+  {
+    "id": "cpp",
+    "name": "C++",
+    "category": "Languages",
+    "aliases": ["c plus plus", "cpp", "modern c++"],
+    "prerequisites": ["data_structures_algorithms"],
+    "description": "High-performance systems programming language with direct memory control."
+  },
+  {
+    "id": "csharp",
+    "name": "C#",
+    "category": "Languages",
+    "aliases": ["c sharp", "c#", ".net c#"],
+    "prerequisites": ["object_oriented_programming"],
+    "description": "Modern multi-paradigm language for .NET framework and enterprise backends."
+  },
+  {
+    "id": "golang",
+    "name": "Go (Golang)",
+    "category": "Languages",
+    "aliases": ["go", "golang"],
+    "prerequisites": [],
+    "description": "Fast, statically typed compiled language designed for concurrency and microservices."
+  },
+  {
+    "id": "rust",
+    "name": "Rust",
+    "category": "Languages",
+    "aliases": ["rust-lang"],
+    "prerequisites": ["data_structures_algorithms"],
+    "description": "Systems language emphasizing memory safety without a garbage collector."
+  },
+  {
+    "id": "sql",
+    "name": "SQL",
+    "category": "Languages",
+    "aliases": ["structured query language", "ansi sql"],
+    "prerequisites": [],
+    "description": "Domain-specific language for managing and querying relational databases."
+  },
+  {
+    "id": "bash_shell",
+    "name": "Bash & Shell Scripting",
+    "category": "Languages",
+    "aliases": ["bash", "shell scripting", "zsh", "sh"],
+    "prerequisites": ["linux"],
+    "description": "Command line automation and scripting for Unix-like environments."
+  },
+  {
+    "id": "fastapi",
+    "name": "FastAPI",
+    "category": "Backend & Web",
+    "aliases": ["fastapi framework", "starlette", "pydantic api"],
+    "prerequisites": ["python", "rest_api"],
+    "description": "Modern, high-performance web framework for building APIs with Python and type hints."
+  },
+  {
+    "id": "django",
+    "name": "Django",
+    "category": "Backend & Web",
+    "aliases": ["django rest framework", "drf", "django orm"],
+    "prerequisites": ["python", "sql"],
+    "description": "High-level batteries-included Python web framework for rapid development."
+  },
+  {
+    "id": "flask",
+    "name": "Flask",
+    "category": "Backend & Web",
+    "aliases": ["flask framework", "werkzeug"],
+    "prerequisites": ["python", "rest_api"],
+    "description": "Lightweight WSGI micro web framework for Python."
+  },
+  {
+    "id": "nodejs",
+    "name": "Node.js",
+    "category": "Backend & Web",
+    "aliases": ["node", "nodejs runtime"],
+    "prerequisites": ["javascript"],
+    "description": "JavaScript runtime built on Chrome's V8 engine for asynchronous backend services."
+  },
+  {
+    "id": "expressjs",
+    "name": "Express.js",
+    "category": "Backend & Web",
+    "aliases": ["express", "expressjs"],
+    "prerequisites": ["nodejs"],
+    "description": "Minimalist, flexible web application framework for Node.js."
+  },
+  {
+    "id": "springboot",
+    "name": "Spring Boot",
+    "category": "Backend & Web",
+    "aliases": ["spring", "spring framework", "spring-boot"],
+    "prerequisites": ["java", "rest_api"],
+    "description": "Production-ready enterprise backend framework for the Java ecosystem."
+  },
+  {
+    "id": "dotnet_core",
+    "name": "ASP.NET Core",
+    "category": "Backend & Web",
+    "aliases": [".net core", "aspnetcore", "asp.net"],
+    "prerequisites": ["csharp", "rest_api"],
+    "description": "Cross-platform, high-performance open-source framework for modern cloud apps."
+  },
+  {
+    "id": "rest_api",
+    "name": "RESTful API Design",
+    "category": "Backend & Web",
+    "aliases": ["rest", "rest api", "restful web services", "openapi", "swagger"],
+    "prerequisites": [],
+    "description": "Architectural style for designing networked web APIs using HTTP verbs and JSON."
+  },
+  {
+    "id": "graphql",
+    "name": "GraphQL",
+    "category": "Backend & Web",
+    "aliases": ["apollo graphql", "graphql api"],
+    "prerequisites": ["rest_api"],
+    "description": "Query language for APIs giving clients the power to request only what they need."
+  },
+  {
+    "id": "grpc",
+    "name": "gRPC & Protocol Buffers",
+    "category": "Backend & Web",
+    "aliases": ["grpc", "protobuf", "proto"],
+    "prerequisites": ["microservices"],
+    "description": "High performance, open-source universal RPC framework developed by Google."
+  },
+  {
+    "id": "microservices",
+    "name": "Microservices Architecture",
+    "category": "Software Architecture",
+    "aliases": ["microservices", "service-oriented architecture", "soa", "distributed services"],
+    "prerequisites": ["rest_api", "docker"],
+    "description": "Architectural pattern structuring an application as a collection of loosely coupled services."
+  },
+  {
+    "id": "system_design",
+    "name": "System Design & Scalability",
+    "category": "Software Architecture",
+    "aliases": ["system design", "distributed systems", "high availability", "load balancing"],
+    "prerequisites": ["databases_relational", "microservices"],
+    "description": "Designing robust, scalable, fault-tolerant enterprise software architectures."
+  },
+  {
+    "id": "react",
+    "name": "React",
+    "category": "Frontend",
+    "aliases": ["reactjs", "react.js", "react hooks"],
+    "prerequisites": ["javascript"],
+    "description": "Component-based declarative JavaScript library for building user interfaces."
+  },
+  {
+    "id": "nextjs",
+    "name": "Next.js",
+    "category": "Frontend",
+    "aliases": ["next.js", "nextjs app router", "next"],
+    "prerequisites": ["react", "typescript"],
+    "description": "Production React framework with SSR, SSG, and full-stack capabilities."
+  },
+  {
+    "id": "tailwind_css",
+    "name": "Tailwind CSS",
+    "category": "Frontend",
+    "aliases": ["tailwind", "tailwindcss"],
+    "prerequisites": ["html_css"],
+    "description": "Utility-first CSS framework for rapidly building custom user interfaces."
+  },
+  {
+    "id": "html_css",
+    "name": "HTML5 & CSS3",
+    "category": "Frontend",
+    "aliases": ["html", "css", "html5", "css3", "responsive design"],
+    "prerequisites": [],
+    "description": "Core building blocks of the web for content structuring and aesthetic styling."
+  },
+  {
+    "id": "postgresql",
+    "name": "PostgreSQL",
+    "category": "Databases & Storage",
+    "aliases": ["postgres", "psql", "postgresql rdbms"],
+    "prerequisites": ["sql"],
+    "description": "Powerful, open source object-relational database system with strong ACID compliance."
+  },
+  {
+    "id": "mysql",
+    "name": "MySQL",
+    "category": "Databases & Storage",
+    "aliases": ["mariadb", "mysql server"],
+    "prerequisites": ["sql"],
+    "description": "Widely adopted open-source relational database management system."
+  },
+  {
+    "id": "databases_relational",
+    "name": "Relational Database Design & ACID",
+    "category": "Databases & Storage",
+    "aliases": ["rdbms", "relational databases", "database normalization", "indexing", "acid"],
+    "prerequisites": ["sql"],
+    "description": "Database modeling, normalization, transactions, query optimization, and indexing."
+  },
+  {
+    "id": "mongodb",
+    "name": "MongoDB",
+    "category": "Databases & Storage",
+    "aliases": ["mongo", "nosql", "document store"],
+    "prerequisites": [],
+    "description": "Popular NoSQL document database designed for flexibility and scale."
+  },
+  {
+    "id": "redis",
+    "name": "Redis",
+    "category": "Databases & Storage",
+    "aliases": ["redis cache", "in-memory cache", "key-value store"],
+    "prerequisites": [],
+    "description": "In-memory data structure store used as a distributed cache, message broker, and database."
+  },
+  {
+    "id": "elasticsearch",
+    "name": "Elasticsearch",
+    "category": "Databases & Storage",
+    "aliases": ["elastic", "opensearch", "elk stack"],
+    "prerequisites": ["rest_api"],
+    "description": "Distributed search and analytics engine for full-text search and log analytics."
+  },
+  {
+    "id": "kafka",
+    "name": "Apache Kafka",
+    "category": "Databases & Storage",
+    "aliases": ["kafka", "event streaming", "message queues", "rabbitmq"],
+    "prerequisites": ["distributed_systems"],
+    "description": "Distributed event streaming platform for high-throughput messaging pipelines."
+  },
+  {
+    "id": "pandas",
+    "name": "Pandas",
+    "category": "Data Science & ML",
+    "aliases": ["pandas dataframe", "pd"],
+    "prerequisites": ["python"],
+    "description": "Fast and flexible data manipulation and analysis library for Python."
+  },
+  {
+    "id": "numpy",
+    "name": "NumPy",
+    "category": "Data Science & ML",
+    "aliases": ["np", "numerical python", "matrix operations"],
+    "prerequisites": ["python"],
+    "description": "Fundamental package for scientific computing with multi-dimensional arrays."
+  },
+  {
+    "id": "scikit_learn",
+    "name": "Scikit-Learn",
+    "category": "Data Science & ML",
+    "aliases": ["sklearn", "scikit learn"],
+    "prerequisites": ["python", "numpy", "machine_learning"],
+    "description": "Machine learning library providing simple tools for predictive data analysis."
+  },
+  {
+    "id": "machine_learning",
+    "name": "Machine Learning Fundamentals",
+    "category": "Data Science & ML",
+    "aliases": ["ml", "supervised learning", "unsupervised learning", "classification", "regression"],
+    "prerequisites": ["statistics_probability", "python"],
+    "description": "Algorithmic concepts including model training, evaluation, validation, and feature engineering."
+  },
+  {
+    "id": "deep_learning",
+    "name": "Deep Learning & Neural Networks",
+    "category": "Data Science & ML",
+    "aliases": ["neural networks", "dnn", "cnn", "rnn", "transformers"],
+    "prerequisites": ["machine_learning", "numpy"],
+    "description": "Multi-layer neural network architectures, backpropagation, and representation learning."
+  },
+  {
+    "id": "pytorch",
+    "name": "PyTorch",
+    "category": "Data Science & ML",
+    "aliases": ["torch", "pytorch framework"],
+    "prerequisites": ["python", "deep_learning"],
+    "description": "Open source deep learning framework known for dynamic computation graphs."
+  },
+  {
+    "id": "tensorflow",
+    "name": "TensorFlow & Keras",
+    "category": "Data Science & ML",
+    "aliases": ["tensorflow", "tf", "keras"],
+    "prerequisites": ["python", "deep_learning"],
+    "description": "End-to-end open source platform for machine learning and neural network training."
+  },
+  {
+    "id": "nlp",
+    "name": "Natural Language Processing (NLP)",
+    "category": "Data Science & ML",
+    "aliases": ["nlp", "text processing", "tokenization", "sentiment analysis", "spacy", "nltk"],
+    "prerequisites": ["machine_learning", "python"],
+    "description": "Techniques and models for extracting insights and processing human textual language."
+  },
+  {
+    "id": "computer_vision",
+    "name": "Computer Vision",
+    "category": "Data Science & ML",
+    "aliases": ["cv", "opencv", "image processing", "object detection"],
+    "prerequisites": ["deep_learning"],
+    "description": "Visual intelligence methods for processing, analyzing, and understanding digital images."
+  },
+  {
+    "id": "mlops",
+    "name": "MLOps & Model Deployment",
+    "category": "Data Science & ML",
+    "aliases": ["mlops", "mlflow", "model serving", "triton", "kubeflow"],
+    "prerequisites": ["machine_learning", "docker", "fastapi"],
+    "description": "Practices for automating and streamlining machine learning lifecycle and deployment."
+  },
+  {
+    "id": "data_visualization",
+    "name": "Data Visualization",
+    "category": "Data Science & ML",
+    "aliases": ["matplotlib", "seaborn", "plotly", "charting"],
+    "prerequisites": ["pandas"],
+    "description": "Creating communicative visual plots and statistical dashboards from structured datasets."
+  },
+  {
+    "id": "statistics_probability",
+    "name": "Statistics & Probability",
+    "category": "Data Science & ML",
+    "aliases": ["statistics", "probability", "hypothesis testing", "bayesian", "inferential statistics"],
+    "prerequisites": [],
+    "description": "Foundational mathematics for data sampling, probability distributions, and hypothesis tests."
+  },
+  {
+    "id": "docker",
+    "name": "Docker & Containerization",
+    "category": "DevOps & Cloud",
+    "aliases": ["docker", "docker-compose", "containers", "dockerfile"],
+    "prerequisites": ["linux"],
+    "description": "Packaging applications and dependencies into standardized lightweight containers."
+  },
+  {
+    "id": "kubernetes",
+    "name": "Kubernetes (K8s)",
+    "category": "DevOps & Cloud",
+    "aliases": ["k8s", "kubernetes cluster", "helm"],
+    "prerequisites": ["docker", "linux"],
+    "description": "Production container orchestration engine for automated deployment and scaling."
+  },
+  {
+    "id": "linux",
+    "name": "Linux & OS Concepts",
+    "category": "DevOps & Cloud",
+    "aliases": ["linux", "unix", "ubuntu", "debian", "posix"],
+    "prerequisites": [],
+    "description": "Operating system internals, processes, file system navigation, permissions, and networking."
+  },
+  {
+    "id": "ci_cd",
+    "name": "CI/CD & GitHub Actions",
+    "category": "DevOps & Cloud",
+    "aliases": ["ci/cd", "continuous integration", "github actions", "gitlab ci", "jenkins"],
+    "prerequisites": ["git", "docker"],
+    "description": "Automated build, test, and deployment pipelines for reliable software delivery."
+  },
+  {
+    "id": "aws",
+    "name": "Amazon Web Services (AWS)",
+    "category": "DevOps & Cloud",
+    "aliases": ["aws", "amazon cloud", "ec2", "s3", "lambda", "ecs"],
+    "prerequisites": ["linux", "docker"],
+    "description": "Comprehensive cloud computing platform offering compute, storage, and networking."
+  },
+  {
+    "id": "gcp",
+    "name": "Google Cloud Platform (GCP)",
+    "category": "DevOps & Cloud",
+    "aliases": ["gcp", "google cloud", "cloud run", "gke", "bigquery"],
+    "prerequisites": ["linux", "docker"],
+    "description": "Google's suite of cloud computing services running on the same infrastructure as Google products."
+  },
+  {
+    "id": "azure",
+    "name": "Microsoft Azure",
+    "category": "DevOps & Cloud",
+    "aliases": ["azure", "microsoft cloud", "azure devops"],
+    "prerequisites": ["linux", "docker"],
+    "description": "Cloud computing platform by Microsoft for building, testing, and managing applications."
+  },
+  {
+    "id": "terraform",
+    "name": "Terraform (IaC)",
+    "category": "DevOps & Cloud",
+    "aliases": ["terraform", "infrastructure as code", "iac", "opentofu"],
+    "prerequisites": ["aws"],
+    "description": "Declarative tool for provisioning and managing multi-cloud infrastructure."
+  },
+  {
+    "id": "monitoring_observability",
+    "name": "Monitoring & Observability",
+    "category": "DevOps & Cloud",
+    "aliases": ["prometheus", "grafana", "datadog", "opentelemetry", "logging"],
+    "prerequisites": ["docker"],
+    "description": "Instrumentation, metrics collection, distributed tracing, and health alerting."
+  },
+  {
+    "id": "git",
+    "name": "Git & Version Control",
+    "category": "Software Engineering",
+    "aliases": ["git", "github", "gitlab", "branching", "version control"],
+    "prerequisites": [],
+    "description": "Distributed version control system tracking source code history and collaboration."
+  },
+  {
+    "id": "data_structures_algorithms",
+    "name": "Data Structures & Algorithms",
+    "category": "Software Engineering",
+    "aliases": ["dsa", "algorithms", "data structures", "time complexity", "big o"],
+    "prerequisites": [],
+    "description": "Foundational computing constructs: trees, graphs, sorting, searching, and complexity analysis."
+  },
+  {
+    "id": "object_oriented_programming",
+    "name": "Object-Oriented Programming (OOP)",
+    "category": "Software Engineering",
+    "aliases": ["oop", "object oriented", "polymorphism", "encapsulation", "inheritance"],
+    "prerequisites": [],
+    "description": "Programming paradigm based on objects containing data and code routines."
+  },
+  {
+    "id": "unit_testing",
+    "name": "Unit Testing & TDD",
+    "category": "Software Engineering",
+    "aliases": ["unit testing", "pytest", "jest", "test driven development", "tdd", "integration testing"],
+    "prerequisites": ["git"],
+    "description": "Automated code verification, assertions, test fixtures, and test-driven development."
+  },
+  {
+    "id": "agile_scrum",
+    "name": "Agile & Scrum Methodologies",
+    "category": "Software Engineering",
+    "aliases": ["agile", "scrum", "sprints", "jira", "kanban"],
+    "prerequisites": [],
+    "description": "Iterative software development framework emphasizing teamwork and rapid increments."
+  },
+  {
+    "id": "security_auth",
+    "name": "Authentication & Web Security",
+    "category": "Software Engineering",
+    "aliases": ["jwt", "oauth2", "authentication", "authorization", "cors", "owasp"],
+    "prerequisites": ["rest_api"],
+    "description": "Token-based auth, role-based access control, encryption, and OWASP security practices."
+  },
+  {
+    "id": "distributed_systems",
+    "name": "Distributed Systems",
+    "category": "Software Architecture",
+    "aliases": ["distributed systems", "cap theorem", "consensus", "replication", "partitioning"],
+    "prerequisites": ["system_design"],
+    "description": "Theory and practice of independent computers communicating through message-passing."
+  }
+]
