@@ -129,14 +129,14 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
 
   if (!roadmap || roadmap.length === 0) {
     return (
-      <div className="glass-panel rounded-3xl p-10 text-center shadow-xs border-emerald-200">
-        <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-xs">
-          <Award className="w-7 h-7" />
+      <div className="craft-card rounded-2xl p-10 text-center border-emerald-200">
+        <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+          <Award className="w-7 h-7" aria-hidden="true" />
         </div>
         <h3 className="text-lg font-bold text-slate-900">
-          Zero Skill Gaps Detected!
+          Zero Skill Gaps Detected
         </h3>
-        <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+        <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto [text-wrap:pretty]">
           The candidate profile strongly satisfies all required competencies for this target role.
         </p>
       </div>
@@ -158,18 +158,15 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
   return (
     <div className="space-y-6">
       {/* Gamified Roadmap Header & Interactive Progress Banner */}
-      <div className="glass-panel rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-sm space-y-5">
+      <div className="craft-card rounded-2xl p-6 sm:p-7 space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold mb-1">
-              <Compass className="w-3.5 h-3.5" />
-              Traceable Career Action Plan
-            </div>
             <h3 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-              Prioritized Learning & Upskilling Roadmap
+              <Compass className="w-5 h-5 text-indigo-600 shrink-0" aria-hidden="true" />
+              Prioritized Learning &amp; Upskilling Roadmap
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
-              Sequence generated using Priority Formula (Weight × Gap + Foundation bonus)
+            <p className="text-xs text-slate-500 mt-1 [text-wrap:pretty]">
+              Deterministic sequence generated using Priority Formula: <span className="font-mono text-slate-700 font-semibold">Priority = (Weight × Gap) + Foundational Bonus</span>
             </p>
           </div>
 
@@ -177,16 +174,17 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
             <button
               type="button"
               onClick={handleCopyStudyPlan}
-              className="text-xs font-semibold px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition flex items-center gap-1.5"
+              aria-label="Copy entire study plan in Markdown format"
+              className="text-xs font-semibold px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs transition-colors flex items-center gap-1.5 focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus:outline-hidden"
             >
               {copiedPlan ? (
                 <>
-                  <Check className="w-3.5 h-3.5" />
+                  <Check className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Copied Study Guide!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5" />
+                  <Copy className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Copy Study Guide (Markdown)</span>
                 </>
               )}
@@ -195,9 +193,9 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
         </div>
 
         {/* Interactive Progress Meter */}
-        <div className="bg-slate-50/80 rounded-2xl p-4 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center font-extrabold text-sm shadow-xs shrink-0 font-mono">
+            <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-sm shrink-0 font-mono tabular-nums shadow-xs">
               {progressPercentage}%
             </div>
             <div>
@@ -205,7 +203,7 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
                 <span className="text-xs font-bold text-slate-800">
                   Interactive Exercise Progress:
                 </span>
-                <span className="text-xs font-mono font-bold text-indigo-600">
+                <span className="text-xs font-mono font-bold text-indigo-600 tabular-nums">
                   {completedCount} of {totalTasksCount} completed
                 </span>
               </div>
@@ -216,79 +214,95 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
           </div>
 
           <div className="flex items-center gap-4 text-xs font-semibold text-slate-600">
-            <span className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-xl">
-              <Clock className="w-3.5 h-3.5 text-indigo-600" />
-              Total Effort: ~{totalEstimatedHours} Hours
+            <span className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-xl shadow-xs">
+              <Clock className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
+              <span>Total Effort: <strong className="font-mono tabular-nums text-slate-900">~{totalEstimatedHours}h</strong></span>
             </span>
           </div>
         </div>
 
         {/* Phase Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1">
+        <div
+          role="tablist"
+          aria-label="Filter roadmap learning stages"
+          className="flex flex-wrap items-center gap-2 pt-1"
+        >
+          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1" id="phase-tabs-label">
             Learning Stages:
           </span>
           <button
             type="button"
+            role="tab"
+            aria-selected={activePhaseTab === "all"}
+            aria-controls="roadmap-items-container"
             onClick={() => setActivePhaseTab("all")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus:outline-hidden ${
               activePhaseTab === "all"
                 ? "bg-slate-900 text-white shadow-xs"
                 : "bg-slate-100 hover:bg-slate-200 text-slate-600"
             }`}
           >
-            All Gaps ({roadmap.length})
+            All Gaps (<span className="tabular-nums font-mono">{roadmap.length}</span>)
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activePhaseTab === "foundation"}
+            aria-controls="roadmap-items-container"
             onClick={() => setActivePhaseTab("foundation")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 focus:outline-hidden ${
               activePhaseTab === "foundation"
                 ? "bg-rose-600 text-white shadow-xs"
                 : "bg-rose-50 hover:bg-rose-100 text-rose-700"
             }`}
           >
-            Phase 1: Foundations ({phasedRoadmap.phase1.length})
+            Phase 1: Foundations (<span className="tabular-nums font-mono">{phasedRoadmap.phase1.length}</span>)
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activePhaseTab === "core"}
+            aria-controls="roadmap-items-container"
             onClick={() => setActivePhaseTab("core")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 focus:outline-hidden ${
               activePhaseTab === "core"
                 ? "bg-amber-600 text-white shadow-xs"
                 : "bg-amber-50 hover:bg-amber-100 text-amber-700"
             }`}
           >
-            Phase 2: Core Frameworks ({phasedRoadmap.phase2.length})
+            Phase 2: Core Frameworks (<span className="tabular-nums font-mono">{phasedRoadmap.phase2.length}</span>)
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activePhaseTab === "advanced"}
+            aria-controls="roadmap-items-container"
             onClick={() => setActivePhaseTab("advanced")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 focus:outline-hidden ${
               activePhaseTab === "advanced"
                 ? "bg-purple-600 text-white shadow-xs"
                 : "bg-purple-50 hover:bg-purple-100 text-purple-700"
             }`}
           >
-            Phase 3: Systems Specialization ({phasedRoadmap.phase3.length})
+            Phase 3: Systems Specialization (<span className="tabular-nums font-mono">{phasedRoadmap.phase3.length}</span>)
           </button>
         </div>
       </div>
 
       {/* Action Cards List */}
-      <div className="space-y-5">
+      <div id="roadmap-items-container" className="space-y-5">
         {displayedItems.map((item: LearningRoadmapItem) => {
           const isMissing = item.gap_type === "Missing Skill";
 
           return (
             <div
               key={item.skill_id}
-              className="glass-panel rounded-3xl p-6 sm:p-7 shadow-xs hover:border-indigo-300 transition-all space-y-5 border-slate-200"
+              className="craft-card rounded-xl p-6 sm:p-7 hover:border-indigo-300 transition-colors space-y-5"
             >
               {/* Card Header */}
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="flex items-start gap-3.5">
-                  <span className="w-9 h-9 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white font-extrabold text-sm flex items-center justify-center shrink-0 shadow-sm shadow-indigo-300 font-mono mt-0.5">
+                  <span className="w-9 h-9 rounded-xl bg-indigo-600 text-white font-extrabold text-sm flex items-center justify-center shrink-0 shadow-xs font-mono tabular-nums mt-0.5">
                     #{item.priority_rank}
                   </span>
                   <div>
@@ -299,7 +313,7 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
                       <span>
                         Canonical Skill: <strong className="text-slate-800">{item.skill_name}</strong>
                       </span>
-                      <span>•</span>
+                      <span aria-hidden="true">&bull;</span>
                       <span>Category: {item.category}</span>
                     </div>
                   </div>
@@ -325,20 +339,20 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
                   </span>
 
                   <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-                    <Clock className="w-3.5 h-3.5 text-slate-500" />
-                    ~{item.estimated_hours}h
+                    <Clock className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
+                    <span className="font-mono tabular-nums">~{item.estimated_hours}h</span>
                   </span>
                 </div>
               </div>
 
               {/* Foundation-First / Prerequisite Callouts */}
               {item.unmet_prerequisites && item.unmet_prerequisites.length > 0 && (
-                <div className="bg-amber-50/80 border border-amber-200/90 rounded-2xl p-3.5 flex items-start gap-2.5 text-xs text-amber-900">
-                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-amber-900">
+                  <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" aria-hidden="true" />
                   <div>
                     <strong className="font-bold">Prerequisite Notice:</strong>{" "}
                     This skill builds on foundations in{" "}
-                    <span className="font-mono font-bold bg-amber-100/80 px-2 py-0.5 rounded text-amber-950">
+                    <span className="font-mono font-bold bg-amber-100 px-2 py-0.5 rounded text-amber-950">
                       {item.unmet_prerequisites.join(", ")}
                     </span>
                     . We recommend reviewing those foundational concepts in tandem.
@@ -347,11 +361,11 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
               )}
 
               {/* Measurable Objective */}
-              <div className="bg-slate-50/90 rounded-2xl p-4 border border-slate-200/80">
+              <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
                 <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block mb-1">
                   Measurable Competency Objective
                 </span>
-                <p className="text-xs text-slate-800 font-medium leading-relaxed">
+                <p className="text-xs text-slate-800 font-medium leading-relaxed [text-wrap:pretty]">
                   {item.objective}
                 </p>
               </div>
@@ -366,7 +380,7 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
                     {item.topics.map((topic, tidx) => (
                       <span
                         key={tidx}
-                        className="text-xs font-medium bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-xl shadow-2xs transition"
+                        className="text-xs font-medium bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-3 py-1.5 rounded-xl shadow-2xs transition-colors"
                       >
                         {topic}
                       </span>
@@ -381,31 +395,37 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
                   <span className="text-[10px] font-extrabold text-slate-500 uppercase tracking-wider block">
                     Interactive Hands-On Practice Exercises
                   </span>
-                  <div className="space-y-2">
+                  <div className="space-y-2" role="group" aria-label={`Practice tasks for ${item.title}`}>
                     {item.practice_tasks.map((task, tidx) => {
                       const taskId = `${item.skill_id}_task_${tidx}`;
                       const isDone = !!completedTasks[taskId];
 
                       return (
-                        <button
+                        <label
                           key={tidx}
-                          type="button"
-                          onClick={() => toggleTask(taskId)}
-                          className={`w-full text-left p-3 rounded-2xl border text-xs flex items-start gap-3 transition-all ${
+                          className={`w-full text-left p-3 rounded-xl border text-xs flex items-start gap-3 transition-colors cursor-pointer select-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 ${
                             isDone
                               ? "bg-emerald-50/70 border-emerald-200 text-emerald-950 font-medium"
                               : "bg-white hover:bg-slate-50 border-slate-200 text-slate-700"
                           }`}
                         >
-                          {isDone ? (
-                            <CheckSquare className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-                          ) : (
-                            <Square className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
-                          )}
+                          <input
+                            type="checkbox"
+                            checked={isDone}
+                            onChange={() => toggleTask(taskId)}
+                            className="sr-only"
+                          />
+                          <span className="shrink-0 mt-0.5">
+                            {isDone ? (
+                              <CheckSquare className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+                            ) : (
+                              <Square className="w-4 h-4 text-slate-400" aria-hidden="true" />
+                            )}
+                          </span>
                           <span className={isDone ? "line-through opacity-75" : ""}>
                             {task}
                           </span>
-                        </button>
+                        </label>
                       );
                     })}
                   </div>
@@ -413,9 +433,9 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
               )}
 
               {/* Tangible Portfolio Artifact & Documentation Link */}
-              <div className="pt-3 border-t border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="pt-3 border-t border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 text-xs text-slate-700">
-                  <FolderGit2 className="w-4 h-4 text-indigo-600 shrink-0" />
+                  <FolderGit2 className="w-4 h-4 text-indigo-600 shrink-0" aria-hidden="true" />
                   <span>
                     <strong>Portfolio Deliverable:</strong> {item.artifacts}
                   </span>
@@ -425,11 +445,12 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
                   href={item.official_docs}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3.5 py-2 rounded-xl border border-indigo-200 transition shrink-0 shadow-2xs"
+                  aria-label={`Official Documentation for ${item.skill_name} (opens in new tab)`}
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3.5 py-2 rounded-xl border border-indigo-200 transition-colors shrink-0 shadow-2xs focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus:outline-hidden"
                 >
-                  <BookOpen className="w-3.5 h-3.5" />
+                  <BookOpen className="w-3.5 h-3.5" aria-hidden="true" />
                   Official Documentation
-                  <ExternalLink className="w-3 h-3 ml-0.5" />
+                  <ExternalLink className="w-3 h-3 ml-0.5" aria-hidden="true" />
                 </a>
               </div>
             </div>

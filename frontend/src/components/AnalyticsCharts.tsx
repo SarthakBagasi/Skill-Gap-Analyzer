@@ -48,11 +48,11 @@ export default function AnalyticsCharts({
   };
 
   return (
-    <div className="glass-panel rounded-3xl p-6 sm:p-8 shadow-xs border-slate-200">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-6 mb-6 border-b border-slate-100 gap-4">
+    <div className="craft-card rounded-xl p-6 sm:p-7 shadow-xs" role="region" aria-label="Role Competency Visual Analytics">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-5 mb-6 border-b border-slate-100 gap-4">
         <div>
-          <h3 className="text-base font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 text-indigo-600" />
+          <h3 className="text-base font-bold text-slate-900 tracking-tight flex items-center gap-2">
+            <TrendingUp className="w-5 h-5 text-indigo-600" aria-hidden="true" />
             Role Competency Visual Analytics
           </h3>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -61,41 +61,47 @@ export default function AnalyticsCharts({
         </div>
 
         {/* View switcher tabs */}
-        <div className="flex items-center bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-semibold">
+        <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-semibold" role="tablist" aria-label="Analytics visual chart modes">
           <button
             type="button"
+            role="tab"
+            aria-selected={activeChartTab === "radar"}
             onClick={() => setActiveChartTab("radar")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
               activeChartTab === "radar"
                 ? "bg-white text-indigo-700 shadow-xs font-bold"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            <RadarIcon className="w-3.5 h-3.5" />
+            <RadarIcon className="w-3.5 h-3.5" aria-hidden="true" />
             Competency Radar
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activeChartTab === "spectrum"}
             onClick={() => setActiveChartTab("spectrum")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
               activeChartTab === "spectrum"
                 ? "bg-white text-indigo-700 shadow-xs font-bold"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            <BarChart2 className="w-3.5 h-3.5" />
+            <BarChart2 className="w-3.5 h-3.5" aria-hidden="true" />
             Proximity Spectrum
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activeChartTab === "categories"}
             onClick={() => setActiveChartTab("categories")}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
               activeChartTab === "categories"
                 ? "bg-white text-indigo-700 shadow-xs font-bold"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
-            <PieIcon className="w-3.5 h-3.5" />
+            <PieIcon className="w-3.5 h-3.5" aria-hidden="true" />
             Role Weights
           </button>
         </div>

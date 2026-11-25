@@ -132,11 +132,11 @@ ML Systems Engineer | Visionary AI (2023 - Present)
 ];
 
 const LOADING_STEPS = [
-  "Parsing document & preserving technical tokens (C++, C#, .NET)...",
-  "Running spaCy PhraseMatcher across 60+ canonical skills...",
-  "Encoding Sentence-BERT embeddings (all-MiniLM-L6-v2)...",
-  "Computing cosine similarity matrix & Exact match flags...",
-  "Formulating Role Skill-Gap Index (G) & Prerequisite Roadmap...",
+  "Parsing document & preserving technical tokens (C++, C#, .NET)…",
+  "Running spaCy PhraseMatcher across 60+ canonical skills…",
+  "Encoding Sentence-BERT embeddings (all-MiniLM-L6-v2)…",
+  "Computing cosine similarity matrix & Exact match flags…",
+  "Formulating Role Skill-Gap Index (G) & Prerequisite Roadmap…",
 ];
 
 export default function InputPanel({
@@ -275,24 +275,27 @@ export default function InputPanel({
               <button
                 key={p.id}
                 type="button"
+                role="button"
+                aria-pressed={isSelected}
                 onClick={() => handleSelectPersona(p)}
-                className={`text-left p-4 rounded-2xl border transition-all relative overflow-hidden group ${
+                className={`text-left p-4 rounded-xl border transition relative overflow-hidden group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 ${
                   isSelected
-                    ? "bg-white border-indigo-500 shadow-md ring-2 ring-indigo-500/20 translate-y-[-2px]"
-                    : "bg-white/80 hover:bg-white border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-sm"
+                    ? "bg-white border-indigo-600 shadow-sm ring-1 ring-indigo-600/20 translate-y-[-1px]"
+                    : "bg-white border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-sm"
                 }`}
               >
                 {/* Active check pill */}
                 {isSelected && (
-                  <span className="absolute top-3 right-3 text-indigo-600 flex items-center gap-1 text-[10px] font-bold bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
-                    <CheckCircle2 className="w-3 h-3 text-indigo-600" />
+                  <span className="absolute top-3 right-3 text-indigo-700 flex items-center gap-1 text-[10px] font-bold bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
+                    <CheckCircle2 className="w-3 h-3 text-indigo-600" aria-hidden="true" />
                     Selected
                   </span>
                 )}
 
                 <div className="flex items-center gap-3 mb-2.5">
                   <div
-                    className={`w-9 h-9 rounded-xl bg-gradient-to-br ${p.color} text-white flex items-center justify-center shadow-xs shrink-0`}
+                    className={`w-9 h-9 rounded-lg bg-gradient-to-br ${p.color} text-white flex items-center justify-center shadow-xs shrink-0`}
+                    aria-hidden="true"
                   >
                     <Icon className="w-4.5 h-4.5" />
                   </div>
@@ -300,7 +303,7 @@ export default function InputPanel({
                     <h4 className="text-sm font-bold text-slate-900 leading-tight">
                       {p.name}
                     </h4>
-                    <span className="text-[11px] font-semibold text-indigo-600">
+                    <span className="text-[11px] font-semibold text-indigo-700">
                       {p.badge}
                     </span>
                   </div>
@@ -335,51 +338,54 @@ export default function InputPanel({
         {/* Candidate Name & Role Selection */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+            <label htmlFor="candidate-name-input" className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
               <span className="flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-indigo-600" />
+                <User className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
                 Candidate Name
               </span>
             </label>
             <input
+              id="candidate-name-input"
               type="text"
+              autoComplete="name"
               value={candidateName}
               onChange={(e) => {
                 setCandidateName(e.target.value);
                 setSelectedPersonaId("");
               }}
               placeholder="e.g. Alex Johnson"
-              className="w-full px-4 py-3 bg-white/90 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition shadow-xs"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition shadow-xs"
               required
             />
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <label htmlFor="role-select" className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                 <span className="flex items-center gap-1.5">
-                  <Briefcase className="w-3.5 h-3.5 text-indigo-600" />
+                  <Briefcase className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
                   Target Career Role
                 </span>
               </label>
               <button
                 type="button"
                 onClick={() => setUseCustomJD(!useCustomJD)}
-                className="text-xs text-indigo-600 hover:text-indigo-800 font-bold transition flex items-center gap-1"
+                className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold transition flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 rounded"
               >
-                <Wand2 className="w-3 h-3" />
+                <Wand2 className="w-3 h-3" aria-hidden="true" />
                 {useCustomJD ? "Use Role Presets" : "+ Custom Job Description"}
               </button>
             </div>
 
             {!useCustomJD ? (
               <select
+                id="role-select"
                 value={selectedRoleId}
                 onChange={(e) => {
                   onSelectRole(e.target.value);
                   setSelectedPersonaId("");
                 }}
-                className="w-full px-4 py-3 bg-white/90 border border-slate-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition shadow-xs"
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition shadow-xs"
               >
                 {roles.map((role) => (
                   <option key={role.id} value={role.id}>
@@ -388,8 +394,8 @@ export default function InputPanel({
                 ))}
               </select>
             ) : (
-              <div className="text-xs text-indigo-800 bg-indigo-50/80 px-3.5 py-2.5 rounded-xl border border-indigo-200 flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-indigo-600 shrink-0" />
+              <div className="text-xs text-indigo-800 bg-indigo-50 px-3.5 py-2.5 rounded-xl border border-indigo-200 flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-indigo-600 shrink-0" aria-hidden="true" />
                 <span>
                   Custom JD active: Requirements will be extracted on-the-fly via spaCy.
                 </span>
@@ -402,7 +408,7 @@ export default function InputPanel({
         {useCustomJD && (
           <div className="space-y-2 animate-fadeIn">
             <div className="flex items-center justify-between">
-              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <label htmlFor="custom-jd-textarea" className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
                 Paste Job Description Specification
               </label>
               <span className="text-[11px] text-slate-400">
@@ -410,11 +416,12 @@ export default function InputPanel({
               </span>
             </div>
             <textarea
+              id="custom-jd-textarea"
               rows={4}
               value={customJD}
               onChange={(e) => setCustomJD(e.target.value)}
-              placeholder="e.g. We are seeking a Backend Engineer with hands-on experience in FastAPI, PostgreSQL, Docker, Redis caching, and Pytest unit testing..."
-              className="w-full p-4 bg-white/90 border border-slate-200 rounded-xl text-xs font-mono focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition shadow-xs"
+              placeholder="e.g. We are seeking a Backend Engineer with hands-on experience in FastAPI, PostgreSQL, Docker, Redis caching, and Pytest unit testing…"
+              className="w-full p-4 bg-white border border-slate-200 rounded-xl text-xs font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition shadow-xs"
               required={useCustomJD}
             />
           </div>
@@ -423,14 +430,14 @@ export default function InputPanel({
         {/* Resume Input Mode Toggle */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <span className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
               Resume Ingestion Source
-            </label>
+            </span>
             <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-medium">
               <button
                 type="button"
                 onClick={() => setInputMode("text")}
-                className={`px-3.5 py-1.5 rounded-lg transition ${
+                className={`px-3.5 py-1.5 rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                   inputMode === "text"
                     ? "bg-white text-indigo-700 shadow-xs font-bold"
                     : "text-slate-600 hover:text-slate-900"
@@ -441,7 +448,7 @@ export default function InputPanel({
               <button
                 type="button"
                 onClick={() => setInputMode("upload")}
-                className={`px-3.5 py-1.5 rounded-lg transition ${
+                className={`px-3.5 py-1.5 rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                   inputMode === "upload"
                     ? "bg-white text-indigo-700 shadow-xs font-bold"
                     : "text-slate-600 hover:text-slate-900"
@@ -457,14 +464,15 @@ export default function InputPanel({
             <div className="space-y-2">
               <div className="relative">
                 <textarea
+                  id="resume-text-input"
                   rows={9}
                   value={resumeText}
                   onChange={(e) => {
                     setResumeText(e.target.value);
                     setSelectedPersonaId("");
                   }}
-                  placeholder="Paste candidate resume text or CV summary here..."
-                  className="w-full p-4 bg-white/90 border border-slate-200 rounded-2xl text-xs font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition shadow-xs"
+                  placeholder="Paste candidate resume text or CV summary here…"
+                  className="w-full p-4 bg-white border border-slate-200 rounded-xl text-xs font-mono leading-relaxed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition shadow-xs"
                   required={inputMode === "text"}
                 />
 
@@ -476,10 +484,10 @@ export default function InputPanel({
                       setResumeText("");
                       setSelectedPersonaId("");
                     }}
-                    title="Clear text"
-                    className="p-1.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-500 rounded-lg text-xs transition"
+                    aria-label="Clear resume text"
+                    className="p-1.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-500 rounded-lg text-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
                   >
-                    <Eraser className="w-3.5 h-3.5" />
+                    <Eraser className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -488,14 +496,14 @@ export default function InputPanel({
               <div className="flex items-center justify-between text-[11px] text-slate-500 px-1">
                 <div className="flex items-center gap-3">
                   <span>
-                    Words: <strong className="text-slate-700">{wordCount}</strong>
+                    Words: <strong className="text-slate-700 tabular-nums">{wordCount}</strong>
                   </span>
-                  <span>•</span>
+                  <span aria-hidden="true">•</span>
                   <span>
-                    Chars: <strong className="text-slate-700">{charCount}</strong>
+                    Chars: <strong className="text-slate-700 tabular-nums">{charCount}</strong>
                   </span>
-                  <span>•</span>
-                  <span>Est. Read: ~{Math.ceil(wordCount / 200)} min</span>
+                  <span aria-hidden="true">•</span>
+                  <span>Est. Read: ~{Math.ceil(wordCount / 200)}&nbsp;min</span>
                 </div>
                 <span className="text-indigo-600 font-medium">
                   Tech symbols C++, C#, .NET preserved automatically
@@ -518,6 +526,15 @@ export default function InputPanel({
 
               {!selectedFile ? (
                 <div
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Drop resume file here, or press enter to browse files"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      fileInputRef.current?.click();
+                    }
+                  }}
                   onDragOver={(e) => {
                     e.preventDefault();
                     setIsDragOver(true);
@@ -525,13 +542,13 @@ export default function InputPanel({
                   onDragLeave={() => setIsDragOver(false)}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-3xl p-10 flex flex-col items-center justify-center cursor-pointer transition-all ${
+                  className={`border-2 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center cursor-pointer transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                     isDragOver
                       ? "border-indigo-500 bg-indigo-50/50 scale-[1.01]"
                       : "border-slate-300 hover:border-indigo-400 bg-slate-50/50 hover:bg-indigo-50/20"
                   }`}
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3 shadow-xs">
+                  <div className="w-14 h-14 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3 shadow-xs" aria-hidden="true">
                     <Upload className="w-7 h-7" />
                   </div>
                   <p className="text-sm font-bold text-slate-800">
@@ -554,9 +571,9 @@ export default function InputPanel({
                   </div>
                 </div>
               ) : (
-                <div className="bg-white border-2 border-indigo-200 rounded-2xl p-5 flex items-center justify-between shadow-sm">
+                <div className="bg-white border-2 border-indigo-200 rounded-xl p-5 flex items-center justify-between shadow-xs">
                   <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-xs">
+                    <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs" aria-hidden="true">
                       <FileCode className="w-6 h-6" />
                     </div>
                     <div>
@@ -564,7 +581,7 @@ export default function InputPanel({
                         {selectedFile.name}
                       </p>
                       <p className="text-xs text-slate-500 mt-0.5">
-                        {(selectedFile.size / 1024).toFixed(1)} KB • Document validated & ready for parsing
+                        <span className="tabular-nums font-semibold">{(selectedFile.size / 1024).toFixed(1)}</span>&nbsp;KB • Document validated & ready for parsing
                       </p>
                     </div>
                   </div>
@@ -573,17 +590,17 @@ export default function InputPanel({
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
                     >
                       Change
                     </button>
                     <button
                       type="button"
                       onClick={handleRemoveFile}
-                      className="p-1.5 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-lg transition"
-                      title="Remove file"
+                      aria-label="Remove uploaded file"
+                      className="p-1.5 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600"
                     >
-                      <X className="w-5 h-5" />
+                      <X className="w-5 h-5" aria-hidden="true" />
                     </button>
                   </div>
                 </div>
@@ -597,22 +614,23 @@ export default function InputPanel({
           <button
             type="submit"
             disabled={isLoading || (inputMode === "upload" && !selectedFile)}
-            className="w-full relative overflow-hidden bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 hover:from-indigo-700 hover:to-purple-800 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-indigo-500/25 flex items-center justify-center gap-3 transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer"
+            aria-busy={isLoading}
+            className="w-full relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md shadow-indigo-600/20 flex items-center justify-center gap-3 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
           >
             {isLoading ? (
-              <div className="flex items-center gap-3">
-                <Loader2 className="w-5 h-5 animate-spin text-white" />
-                <span className="text-sm font-medium animate-pulse">
+              <div role="status" aria-live="polite" className="flex items-center gap-3">
+                <Loader2 className="w-5 h-5 animate-spin text-white" aria-hidden="true" />
+                <span className="text-sm font-medium">
                   {LOADING_STEPS[loadingStepIdx]}
                 </span>
               </div>
             ) : (
               <>
-                <Sparkles className="w-5 h-5" />
+                <Sparkles className="w-5 h-5 text-indigo-200" aria-hidden="true" />
                 <span className="text-sm tracking-wide">
                   Execute Deterministic Skill Gap Analysis
                 </span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1.5 transition-transform" />
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" aria-hidden="true" />
               </>
             )}
           </button>

@@ -169,16 +169,13 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
   };
 
   return (
-    <div className="glass-panel rounded-3xl border border-slate-200 shadow-xs overflow-hidden">
+    <div className="craft-card rounded-xl shadow-xs overflow-hidden">
       {/* Header section with Search, Category Filter, and Export Tools */}
       <div className="p-6 sm:p-7 border-b border-slate-200/80 space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold mb-1">
-              <Cpu className="w-3.5 h-3.5" />
-              Explainability & Verification Matrix
-            </div>
-            <h3 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <h3 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+              <Cpu className="w-5 h-5 text-indigo-600" aria-hidden="true" />
               Requirement-Level Semantic Proximity Matrix
             </h3>
             <p className="text-xs text-slate-500 mt-0.5">
@@ -191,16 +188,17 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
             <button
               type="button"
               onClick={handleCopyMarkdown}
-              className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs transition flex items-center gap-1.5"
+              aria-label="Copy evidence matrix as Markdown table"
+              className="text-xs font-semibold px-3.5 py-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-1.5"
             >
               {copiedNotification ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <Check className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
                   <span className="text-emerald-700 font-bold">Copied!</span>
                 </>
               ) : (
                 <>
-                  <Copy className="w-3.5 h-3.5 text-slate-500" />
+                  <Copy className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
                   <span>Copy Markdown</span>
                 </>
               )}
@@ -209,9 +207,10 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
             <button
               type="button"
               onClick={handleDownloadCSV}
-              className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs transition flex items-center gap-1.5"
+              aria-label="Download evidence matrix as CSV spreadsheet"
+              className="text-xs font-semibold px-3.5 py-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-1.5"
             >
-              <Download className="w-3.5 h-3.5 text-slate-500" />
+              <Download className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
               <span>Export CSV</span>
             </button>
           </div>
@@ -220,10 +219,12 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
         {/* Search, Filter Pills & Sorter Bar */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-2">
           {/* Status Filter Pills */}
-          <div className="flex flex-wrap items-center bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-medium">
+          <div className="flex flex-wrap items-center bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-medium" role="tablist" aria-label="Status filter">
             <button
+              role="tab"
+              aria-selected={filterStatus === "all"}
               onClick={() => setFilterStatus("all")}
-              className={`px-3 py-1.5 rounded-xl transition ${
+              className={`px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                 filterStatus === "all"
                   ? "bg-white text-slate-900 font-bold shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -232,8 +233,10 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
               All ({counts.all})
             </button>
             <button
+              role="tab"
+              aria-selected={filterStatus === "Strong Match"}
               onClick={() => setFilterStatus("Strong Match")}
-              className={`px-3 py-1.5 rounded-xl transition ${
+              className={`px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600 ${
                 filterStatus === "Strong Match"
                   ? "bg-white text-emerald-700 font-bold shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -242,8 +245,10 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
               Strong ({counts.strong})
             </button>
             <button
+              role="tab"
+              aria-selected={filterStatus === "Partial Match"}
               onClick={() => setFilterStatus("Partial Match")}
-              className={`px-3 py-1.5 rounded-xl transition ${
+              className={`px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600 ${
                 filterStatus === "Partial Match"
                   ? "bg-white text-amber-700 font-bold shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -252,8 +257,10 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
               Partial ({counts.partial})
             </button>
             <button
+              role="tab"
+              aria-selected={filterStatus === "Missing Skill"}
               onClick={() => setFilterStatus("Missing Skill")}
-              className={`px-3 py-1.5 rounded-xl transition ${
+              className={`px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600 ${
                 filterStatus === "Missing Skill"
                   ? "bg-white text-rose-700 font-bold shadow-xs"
                   : "text-slate-600 hover:text-slate-900"
@@ -267,9 +274,10 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
           <div className="flex flex-wrap items-center gap-2">
             {/* Category filter dropdown */}
             <select
+              aria-label="Filter by skill category"
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="text-xs bg-white border border-slate-200 rounded-xl px-3 py-2 font-medium text-slate-700 focus:outline-none focus:ring-1 focus:ring-indigo-500 shadow-xs"
+              className="text-xs bg-white border border-slate-200 rounded-lg px-3 py-2 font-medium text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-xs"
             >
               <option value="all">All Categories ({categories.length})</option>
               {categories.map((c) => (
@@ -280,10 +288,11 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
             </select>
 
             {/* Sorter */}
-            <div className="flex items-center bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-xs text-slate-700 shadow-xs">
+            <div className="flex items-center bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 shadow-xs">
               <span className="text-slate-400 mr-1 text-[11px]">Sort:</span>
               <button
                 type="button"
+                aria-label={`Sort by requirement weight, currently ${sortOrder}`}
                 onClick={() => {
                   if (sortBy === "weight") {
                     setSortOrder(sortOrder === "desc" ? "asc" : "desc");
@@ -292,7 +301,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                     setSortOrder("desc");
                   }
                 }}
-                className={`px-2 py-0.5 rounded font-medium ${
+                className={`px-2 py-0.5 rounded font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                   sortBy === "weight" ? "text-indigo-600 font-bold bg-indigo-50" : "text-slate-600"
                 }`}
               >
@@ -300,6 +309,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
               </button>
               <button
                 type="button"
+                aria-label={`Sort by match score, currently ${sortOrder}`}
                 onClick={() => {
                   if (sortBy === "similarity") {
                     setSortOrder(sortOrder === "desc" ? "asc" : "desc");
@@ -308,7 +318,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                     setSortOrder("desc");
                   }
                 }}
-                className={`px-2 py-0.5 rounded font-medium ${
+                className={`px-2 py-0.5 rounded font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                   sortBy === "similarity" ? "text-indigo-600 font-bold bg-indigo-50" : "text-slate-600"
                 }`}
               >
@@ -318,13 +328,14 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
 
             {/* Search Box */}
             <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
               <input
                 type="text"
-                placeholder="Filter by keyword..."
+                aria-label="Filter competencies by search query"
+                placeholder="Filter by keyword…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 pr-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-xs w-44 sm:w-52"
+                className="pl-8 pr-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-xs w-44 sm:w-52"
               />
             </div>
           </div>
@@ -333,16 +344,16 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
 
       {/* Interactive Table */}
       <div className="overflow-x-auto">
-        <table className="w-full text-left text-xs border-collapse">
+        <table className="w-full text-left text-xs border-collapse" aria-label="Requirement-Level Explainability Matrix">
           <thead>
-            <tr className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
-              <th className="py-3.5 px-5">Target Requirement</th>
-              <th className="py-3.5 px-3">Role Weight</th>
-              <th className="py-3.5 px-3">Match Status</th>
-              <th className="py-3.5 px-3">Mechanism</th>
-              <th className="py-3.5 px-3">Similarity</th>
-              <th className="py-3.5 px-3">Candidate Proximity</th>
-              <th className="py-3.5 px-4 text-right">Deep Dive</th>
+            <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+              <th scope="col" className="py-3.5 px-5">Target Requirement</th>
+              <th scope="col" className="py-3.5 px-3">Role Weight</th>
+              <th scope="col" className="py-3.5 px-3">Match Status</th>
+              <th scope="col" className="py-3.5 px-3">Mechanism</th>
+              <th scope="col" className="py-3.5 px-3">Similarity</th>
+              <th scope="col" className="py-3.5 px-3">Candidate Proximity</th>
+              <th scope="col" className="py-3.5 px-4 text-right">Deep Dive</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -378,7 +389,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
 
                       {/* Weight & Importance */}
                       <td className="py-4 px-3 whitespace-nowrap">
-                        <span className="font-mono font-bold text-slate-800 text-xs">
+                        <span className="font-mono font-bold text-slate-800 text-xs tabular-nums">
                           {Math.round(item.weight * 100)}%
                         </span>
                         <span
@@ -405,10 +416,10 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                       {/* Similarity */}
                       <td className="py-4 px-3 whitespace-nowrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-extrabold text-slate-900 text-xs">
+                          <span className="font-mono font-extrabold text-slate-900 text-xs tabular-nums">
                             {(item.similarity_score * 100).toFixed(0)}%
                           </span>
-                          <div className="w-16 bg-slate-100 h-2 rounded-full overflow-hidden">
+                          <div className="w-16 bg-slate-100 h-2 rounded-full overflow-hidden" aria-hidden="true">
                             <div
                               className={`h-full rounded-full ${
                                 item.similarity_score >= 0.65
@@ -428,7 +439,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                       {/* Candidate Proximity */}
                       <td className="py-4 px-3">
                         {item.matched_candidate_skill ? (
-                          <span className="font-medium text-slate-800 bg-white border border-slate-200 px-2.5 py-1 rounded-lg text-[11px] inline-block shadow-2xs">
+                          <span className="font-medium text-slate-800 bg-white border border-slate-200 px-2.5 py-1 rounded-md text-[11px] inline-block shadow-2xs">
                             {item.matched_candidate_skill}
                           </span>
                         ) : (
@@ -442,12 +453,15 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                       <td className="py-4 px-4 text-right">
                         <button
                           type="button"
-                          className="p-1 rounded-lg text-slate-400 group-hover:text-indigo-600 group-hover:bg-white transition"
+                          aria-expanded={isExpanded}
+                          aria-controls={`detail-${item.skill_id}`}
+                          aria-label={`${isExpanded ? "Collapse" : "Expand"} deep dive explanation for ${item.skill_name}`}
+                          className="p-1 rounded-lg text-slate-400 group-hover:text-indigo-600 group-hover:bg-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
                         >
                           {isExpanded ? (
-                            <ChevronUp className="w-4 h-4 text-indigo-600" />
+                            <ChevronUp className="w-4 h-4 text-indigo-600" aria-hidden="true" />
                           ) : (
-                            <ChevronDown className="w-4 h-4" />
+                            <ChevronDown className="w-4 h-4" aria-hidden="true" />
                           )}
                         </button>
                       </td>
@@ -455,7 +469,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
 
                     {/* Expandable Explainability Drawer */}
                     {isExpanded && (
-                      <tr className="bg-slate-50/90 border-y border-indigo-100">
+                      <tr id={`detail-${item.skill_id}`} className="bg-slate-50/90 border-y border-indigo-100">
                         <td colSpan={7} className="p-5">
                           <div className="glass-panel rounded-2xl p-4 sm:p-5 border-indigo-200/80 shadow-xs space-y-3">
                             <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-100">

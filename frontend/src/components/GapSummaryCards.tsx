@@ -137,7 +137,7 @@ export default function GapSummaryCards({
     });
 
     return Object.entries(categories).map(([catName, data]) => ({
-      category: catName.length > 18 ? `${catName.slice(0, 16)}..` : catName,
+      category: catName.length > 18 ? `${catName.slice(0, 16)}…` : catName,
       fullCategory: catName,
       candidate: data.totalWeight > 0 ? Math.round(data.candidateScore / data.totalWeight) : 0,
       required: 100, // benchmark 100%
@@ -162,7 +162,7 @@ export default function GapSummaryCards({
         : Math.round(item.similarity_score * 100);
 
       return {
-        name: item.skill_name.length > 15 ? `${item.skill_name.slice(0, 13)}..` : item.skill_name,
+        name: item.skill_name.length > 15 ? `${item.skill_name.slice(0, 13)}…` : item.skill_name,
         fullName: item.skill_name,
         score: effectiveScore,
         status: isSimulated ? "Strong Match (Simulated)" : item.status,
@@ -184,7 +184,7 @@ export default function GapSummaryCards({
       {/* 1. Top Performance Metric Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Card 1: Circular Gauge & Gap Index */}
-        <div className="glass-panel rounded-3xl p-5 shadow-xs relative overflow-hidden flex flex-col justify-between border-slate-200">
+        <div className="craft-card rounded-xl p-5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Role Skill-Gap Index (G)
@@ -205,15 +205,15 @@ export default function GapSummaryCards({
           <div className="flex items-center justify-between my-2">
             <div>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-3xl font-extrabold font-mono text-slate-900 tracking-tight">
+                <span className="text-3xl font-extrabold font-mono text-slate-900 tracking-tight tabular-nums">
                   {displayGapIndex.toFixed(3)}
                 </span>
               </div>
               <p className="text-xs text-slate-500 mt-1">
-                Deficit: <strong className="text-slate-800">{(displayGapIndex * 100).toFixed(1)}%</strong>
+                Deficit: <strong className="text-slate-800 tabular-nums">{(displayGapIndex * 100).toFixed(1)}%</strong>
               </p>
               {simulatorActive && simulationResults.scoreGain > 0 && (
-                <span className="inline-block mt-1 text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                <span className="inline-block mt-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200 tabular-nums">
                   +{simulationResults.scoreGain.toFixed(1)}% Simulated Gain
                 </span>
               )}
@@ -221,7 +221,7 @@ export default function GapSummaryCards({
 
             {/* Circular Gauge Graphic */}
             <div className="relative flex items-center justify-center">
-              <svg height={radius * 2} width={radius * 2} className="transform -rotate-90">
+              <svg height={radius * 2} width={radius * 2} className="transform -rotate-90" aria-hidden="true">
                 <circle
                   stroke="#e2e8f0"
                   fill="transparent"
@@ -231,7 +231,7 @@ export default function GapSummaryCards({
                   cy={radius}
                 />
                 <circle
-                  stroke={displayScore >= 75 ? "#10b981" : displayScore >= 50 ? "#f59e0b" : "#f43f5e"}
+                  stroke={displayScore >= 75 ? "#059669" : displayScore >= 50 ? "#d97706" : "#e11d48"}
                   fill="transparent"
                   strokeWidth={stroke}
                   strokeDasharray={`${circumference} ${circumference}`}
@@ -243,7 +243,7 @@ export default function GapSummaryCards({
                 />
               </svg>
               <div className="absolute text-center">
-                <span className="text-xs font-extrabold text-slate-900 font-mono">
+                <span className="text-xs font-extrabold text-slate-900 font-mono tabular-nums">
                   {Math.round(displayScore)}%
                 </span>
                 <span className="block text-[8px] uppercase tracking-tighter text-slate-400 font-bold">
@@ -255,7 +255,7 @@ export default function GapSummaryCards({
 
           <div className="mt-2 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
             <span>Overall Alignment:</span>
-            <span className="font-extrabold text-indigo-600 font-mono text-xs">
+            <span className="font-extrabold text-indigo-600 font-mono text-xs tabular-nums">
               {displayScore.toFixed(1)}%
             </span>
           </div>
@@ -265,22 +265,23 @@ export default function GapSummaryCards({
         <button
           type="button"
           onClick={() => onFilterClick && onFilterClick("Strong Match")}
-          className="glass-panel text-left rounded-3xl p-5 shadow-xs border-emerald-100 hover:border-emerald-300 hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer"
+          aria-label={`View ${strong_matches_count} strong matching requirements`}
+          className="craft-card text-left rounded-xl p-5 shadow-xs border-slate-200 hover:border-emerald-300 hover:shadow-sm transition flex flex-col justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">
               Strong Matches
             </span>
-            <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:scale-105 transition-transform" aria-hidden="true">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
           <div className="my-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-emerald-700 tracking-tight font-mono">
+              <span className="text-3xl font-extrabold text-emerald-700 tracking-tight font-mono tabular-nums">
                 {strong_matches_count}
               </span>
-              <span className="text-xs font-medium text-slate-400">
+              <span className="text-xs font-medium text-slate-400 tabular-nums">
                 / {total_requirements_count} required
               </span>
             </div>
@@ -288,7 +289,7 @@ export default function GapSummaryCards({
               Exact tokens & high-cosine semantic equivalents.
             </p>
           </div>
-          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2">
+          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2" aria-hidden="true">
             <div
               className="bg-emerald-500 h-full rounded-full transition-all duration-700"
               style={{
@@ -302,22 +303,23 @@ export default function GapSummaryCards({
         <button
           type="button"
           onClick={() => onFilterClick && onFilterClick("Partial Match")}
-          className="glass-panel text-left rounded-3xl p-5 shadow-xs border-amber-100 hover:border-amber-300 hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer"
+          aria-label={`View ${partial_matches_count} partial matching requirements`}
+          className="craft-card text-left rounded-xl p-5 shadow-xs border-slate-200 hover:border-amber-300 hover:shadow-sm transition flex flex-col justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">
               Partial Matches
             </span>
-            <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center group-hover:scale-105 transition-transform" aria-hidden="true">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
           <div className="my-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-amber-700 tracking-tight font-mono">
+              <span className="text-3xl font-extrabold text-amber-700 tracking-tight font-mono tabular-nums">
                 {partial_matches_count}
               </span>
-              <span className="text-xs font-medium text-slate-400">
+              <span className="text-xs font-medium text-slate-400 tabular-nums">
                 / {total_requirements_count} required
               </span>
             </div>
@@ -325,7 +327,7 @@ export default function GapSummaryCards({
               Related skill present, but canonical depth needed.
             </p>
           </div>
-          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2">
+          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2" aria-hidden="true">
             <div
               className="bg-amber-500 h-full rounded-full transition-all duration-700"
               style={{
@@ -339,22 +341,23 @@ export default function GapSummaryCards({
         <button
           type="button"
           onClick={() => onFilterClick && onFilterClick("Missing Skill")}
-          className="glass-panel text-left rounded-3xl p-5 shadow-xs border-rose-100 hover:border-rose-300 hover:shadow-md transition-all flex flex-col justify-between group cursor-pointer"
+          aria-label={`View ${missing_skills_count} missing requirements`}
+          className="craft-card text-left rounded-xl p-5 shadow-xs border-slate-200 hover:border-rose-300 hover:shadow-sm transition flex flex-col justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-rose-800 uppercase tracking-wider">
               Missing Skills
             </span>
-            <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center group-hover:scale-105 transition-transform" aria-hidden="true">
               <XCircle className="w-4 h-4" />
             </div>
           </div>
           <div className="my-2">
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-extrabold text-rose-700 tracking-tight font-mono">
+              <span className="text-3xl font-extrabold text-rose-700 tracking-tight font-mono tabular-nums">
                 {missing_skills_count}
               </span>
-              <span className="text-xs font-medium text-slate-400">
+              <span className="text-xs font-medium text-slate-400 tabular-nums">
                 / {total_requirements_count} required
               </span>
             </div>
@@ -362,7 +365,7 @@ export default function GapSummaryCards({
               Unaddressed core competencies to target first.
             </p>
           </div>
-          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2">
+          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2" aria-hidden="true">
             <div
               className="bg-rose-500 h-full rounded-full transition-all duration-700"
               style={{
@@ -374,7 +377,7 @@ export default function GapSummaryCards({
       </div>
 
       {/* 2. Interactive "What-If" Upskilling Simulator Drawer */}
-      <div className="bg-gradient-to-r from-indigo-900 via-slate-900 to-indigo-950 text-white rounded-3xl p-6 sm:p-7 shadow-lg relative overflow-hidden">
+      <div className="bg-slate-900 text-white rounded-2xl p-6 sm:p-7 shadow-md relative overflow-hidden border border-slate-800">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-indigo-800/80 gap-3">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 text-indigo-400 border border-indigo-400/30 flex items-center justify-center shrink-0">
