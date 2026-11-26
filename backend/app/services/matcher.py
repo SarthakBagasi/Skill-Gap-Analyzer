@@ -7,16 +7,18 @@ from sklearn.metrics.pairwise import cosine_similarity
 # Prevent HuggingFace Hub network retry timeouts in offline/sandboxed environments
 os.environ["HF_HUB_OFFLINE"] = "1"
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
-
-from sentence_transformers import SentenceTransformer
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 _model = None
 _catalog_skills_by_id = {}
 
 
-def get_embedding_model() -> SentenceTransformer:
+def get_embedding_model():
     global _model
     if _model is None:
+        import torch
+        torch.set_num_threads(1)
+        from sentence_transformers import SentenceTransformer
         try:
             _model = SentenceTransformer("all-MiniLM-L6-v2", local_files_only=True)
         except Exception:

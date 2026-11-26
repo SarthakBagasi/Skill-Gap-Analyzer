@@ -4,11 +4,17 @@ WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV MALLOC_ARENA_MAX=2
+ENV OMP_NUM_THREADS=1
+ENV TOKENIZERS_PARALLELISM=false
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Install lightweight CPU-only PyTorch (reduces RAM from ~600MB to ~120MB, prevents Render 512MB OOM)
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
 COPY backend/requirements.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt

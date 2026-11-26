@@ -24,7 +24,7 @@ def get_nlp_and_matcher():
     global _nlp, _matcher, _skills_by_id, _phrase_to_skill_id
     if _nlp is None:
         try:
-            _nlp = spacy.load("en_core_web_sm")
+            _nlp = spacy.load("en_core_web_sm", disable=["ner"])
         except Exception:
             _nlp = spacy.blank("en")
 
