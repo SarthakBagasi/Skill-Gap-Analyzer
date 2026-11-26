@@ -131,7 +131,7 @@ def capture_all():
         # -------------------------------------------------------------
         # Screen 5: Saved History Page
         # -------------------------------------------------------------
-        print("[Bonus/5] Navigating to http://localhost:3000/history...")
+        print("[Bonus 1/3] Navigating to http://localhost:3000/history...")
         driver.get("http://localhost:3000/history")
         time.sleep(2.5)
 
@@ -139,15 +139,46 @@ def capture_all():
         driver.save_screenshot(file5)
         print(f"  -> Captured: {file5}")
 
+        # -------------------------------------------------------------
+        # Screen 6: Interactive Sandbox (Clean state without prefilled mock data)
+        # -------------------------------------------------------------
+        print("[Bonus 2/3] Navigating to http://localhost:3000/sandbox...")
+        driver.get("http://localhost:3000/sandbox")
+        time.sleep(2.5)
+
+        file6 = os.path.join(SCREENSHOT_DIR, "06_interactive_sandbox.png")
+        driver.save_screenshot(file6)
+        print(f"  -> Captured: {file6}")
+
+        # -------------------------------------------------------------
+        # Screen 7: Candidate Auth & Persona Switch Page
+        # -------------------------------------------------------------
+        print("[Bonus 3/3] Navigating to http://localhost:3000/login...")
+        driver.get("http://localhost:3000/login")
+        time.sleep(2.5)
+
+        file7 = os.path.join(SCREENSHOT_DIR, "07_auth_login.png")
+        driver.save_screenshot(file7)
+        print(f"  -> Captured: {file7}")
+
         # Copy all screenshots to the artifact directory
         if os.path.exists(BRAIN_DIR):
-            for fname in ["01_input_role_selection.png", "02_gap_summary_cards.png", "03_evidence_explainability_table.png", "04_learning_roadmap.png", "05_saved_history_page.png"]:
+            for fname in [
+                "01_input_role_selection.png",
+                "02_gap_summary_cards.png",
+                "03_evidence_explainability_table.png",
+                "04_learning_roadmap.png",
+                "05_saved_history_page.png",
+                "06_interactive_sandbox.png",
+                "07_auth_login.png",
+            ]:
                 src = os.path.join(SCREENSHOT_DIR, fname)
-                dst = os.path.join(BRAIN_DIR, fname)
-                shutil.copy2(src, dst)
-                print(f"  [Copied to Brain Artifacts] {fname}")
+                if os.path.exists(src):
+                    dst = os.path.join(BRAIN_DIR, fname)
+                    shutil.copy2(src, dst)
+                    print(f"  [Copied to Brain Artifacts] {fname}")
 
-        print("\nAll 5 application screenshots captured successfully!")
+        print("\nAll application screenshots captured successfully!")
 
     finally:
         driver.quit()

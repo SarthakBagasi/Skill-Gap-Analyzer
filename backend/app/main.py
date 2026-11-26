@@ -2,15 +2,17 @@ import json
 import os
 import uuid
 import datetime
+import hashlib
+import secrets
 from contextlib import asynccontextmanager
 from typing import Optional, List
 
-from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form, status
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Form, Header, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-from .database import engine, Base, get_db, SessionLocal
-from .models import Skill, RoleProfile, CuratedRecommendation, AnalysisRun
+from .database import engine, Base, get_db, SessionLocal, init_db
+from .models import Skill, RoleProfile, CuratedRecommendation, AnalysisRun, User
 from .schemas import (
     SkillResponse,
     RoleProfileResponse,
@@ -19,6 +21,10 @@ from .schemas import (
     ExtractedSkillItem,
     MatchBreakdownItem,
     LearningRoadmapItem,
+    UserRegisterRequest,
+    UserLoginRequest,
+    UserResponse,
+    AuthResponse,
 )
 from .services.parser import parse_document, preserve_clean_text
 from .services.extractor import extract_skills_from_text, get_skills_catalog
@@ -85,11 +91,78 @@ def seed_database(db: Session):
                     db.add(rec)
             db.commit()
 
+    # 4. Seed Default Users & Associate Historical Audits
+    if db.query(User).count() == 0:
+        default_users = [
+            User(
+                id="user_alex",
+                username="alex",
+                email="alex.johnson@email.com",
+                password_hash=hash_password("alex123"),
+                full_name="Alex Johnson",
+                role="candidate",
+                target_role_id="backend_developer",
+            ),
+            User(
+                id="user_priya",
+                username="priya",
+                email="priya.sharma@email.com",
+                password_hash=hash_password("priya123"),
+                full_name="Priya Sharma",
+                role="candidate",
+                target_role_id="data_scientist",
+            ),
+            User(
+                id="user_marcus",
+                username="marcus",
+                email="marcus.vance@email.com",
+                password_hash=hash_password("marcus123"),
+                full_name="Marcus Vance",
+                role="candidate",
+                target_role_id="ml_engineer",
+            ),
+        ]
+        for u in default_users:
+            db.add(u)
+        db.commit()
+
+        # Link past unassigned analysis runs to corresponding accounts
+        db.query(AnalysisRun).filter(AnalysisRun.candidate_name.ilike("%Alex Johnson%"), AnalysisRun.user_id == None).update({"user_id": "user_alex"}, synchronize_session=False)
+        db.query(AnalysisRun).filter(AnalysisRun.candidate_name.ilike("%Priya Sharma%"), AnalysisRun.user_id == None).update({"user_id": "user_priya"}, synchronize_session=False)
+        db.query(AnalysisRun).filter(AnalysisRun.candidate_name.ilike("%Marcus Vance%"), AnalysisRun.user_id == None).update({"user_id": "user_marcus"}, synchronize_session=False)
+        db.commit()
+
+
+AUTH_SALT = "skill-gap-secure-salt-2026"
+
+
+def hash_password(password: str) -> str:
+    return hashlib.sha256((password + AUTH_SALT).encode("utf-8")).hexdigest()
+
+
+def verify_password(plain_password: str, hashed: str) -> bool:
+    return hash_password(plain_password) == hashed
+
+
+def extract_user_id_from_auth(auth_header: Optional[str] = None, user_id_param: Optional[str] = None) -> Optional[str]:
+    if user_id_param and user_id_param.strip():
+        return user_id_param.strip()
+    if auth_header:
+        header_val = auth_header.strip()
+        if header_val.startswith("Bearer "):
+            token = header_val.replace("Bearer ", "").strip()
+            # Token format: tok_<user_id>_<hash>
+            if token.startswith("tok_"):
+                parts = token.split("_")
+                if len(parts) >= 3:
+                    return f"{parts[1]}_{parts[2]}" if parts[1] == "user" else parts[1]
+    return None
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize DB schema
-    Base.metadata.create_all(bind=engine)
+    # Initialize DB schema & auto-migrate columns
+    init_db()
     # Run startup seeding
     db = SessionLocal()
     try:
@@ -167,6 +240,71 @@ def get_role_profile(role_id: str, db: Session = Depends(get_db)):
     return role
 
 
+@app.post("/api/auth/register", response_model=AuthResponse)
+def register_user(req: UserRegisterRequest, db: Session = Depends(get_db)):
+    """Registers a new user account."""
+    clean_username = req.username.strip().lower()
+    existing = db.query(User).filter(User.username == clean_username).first()
+    if existing:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username already taken. Please choose another username.",
+        )
+    user_id = f"user_{uuid.uuid4().hex[:12]}"
+    new_user = User(
+        id=user_id,
+        username=clean_username,
+        email=req.email.strip() if req.email else None,
+        password_hash=hash_password(req.password),
+        full_name=req.full_name.strip(),
+        role="candidate",
+        target_role_id=req.target_role_id,
+    )
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    token = f"tok_{new_user.id}_{secrets.token_hex(16)}"
+    return AuthResponse(
+        user=UserResponse.model_validate(new_user),
+        token=token,
+        message=f"Welcome {new_user.full_name}! Account created successfully.",
+    )
+
+
+@app.post("/api/auth/login", response_model=AuthResponse)
+def login_user(req: UserLoginRequest, db: Session = Depends(get_db)):
+    """Authenticates user credentials and issues a session token."""
+    clean_username = req.username.strip().lower()
+    user = db.query(User).filter(User.username == clean_username).first()
+    if not user or not verify_password(req.password, user.password_hash):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password.",
+        )
+    token = f"tok_{user.id}_{secrets.token_hex(16)}"
+    return AuthResponse(
+        user=UserResponse.model_validate(user),
+        token=token,
+        message=f"Welcome back, {user.full_name}!",
+    )
+
+
+@app.get("/api/auth/me", response_model=UserResponse)
+def get_current_user(
+    authorization: Optional[str] = Header(None),
+    x_user_id: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Retrieves profile of currently signed-in user."""
+    uid = extract_user_id_from_auth(authorization, x_user_id)
+    if not uid:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+    user = db.query(User).filter(User.id == uid).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    return UserResponse.model_validate(user)
+
+
 @app.post("/api/analyze", response_model=AnalysisResponse)
 async def analyze_candidate_skills(
     candidate_name: Optional[str] = Form("Candidate"),
@@ -174,6 +312,8 @@ async def analyze_candidate_skills(
     resume_text: Optional[str] = Form(None),
     custom_job_description: Optional[str] = Form(None),
     resume_file: Optional[UploadFile] = File(None),
+    user_id: Optional[str] = Form(None),
+    authorization: Optional[str] = Header(None),
     db: Session = Depends(get_db),
 ):
     """
@@ -273,8 +413,15 @@ async def analyze_candidate_skills(
     now_dt = datetime.datetime.utcnow()
     overall_score = round((1.0 - gap_index_G) * 100, 1)
 
+    active_user_id = extract_user_id_from_auth(authorization, user_id)
+    if active_user_id and (not candidate_name or candidate_name == "Candidate"):
+        curr_user = db.query(User).filter(User.id == active_user_id).first()
+        if curr_user:
+            candidate_name = curr_user.full_name
+
     analysis_run = AnalysisRun(
         id=run_id,
+        user_id=active_user_id,
         candidate_name=candidate_name or "Candidate",
         role_profile_id=role_profile_id if not custom_job_description else "custom",
         role_profile_title=role_title,
@@ -312,14 +459,25 @@ async def analyze_candidate_skills(
 
 
 @app.get("/api/history", response_model=List[AnalysisHistoryItem])
-def get_analysis_history(db: Session = Depends(get_db)):
-    """Retrieves all historical skill gap assessment runs for candidate audit."""
-    runs = db.query(AnalysisRun).order_by(AnalysisRun.created_at.desc()).all()
+def get_analysis_history(
+    user_id: Optional[str] = Query(None),
+    authorization: Optional[str] = Header(None),
+    db: Session = Depends(get_db),
+):
+    """Retrieves historical skill gap assessment runs. When authenticated, filters to user-specific runs."""
+    active_user_id = extract_user_id_from_auth(authorization, user_id)
+
+    query = db.query(AnalysisRun)
+    if active_user_id:
+        query = query.filter(AnalysisRun.user_id == active_user_id)
+
+    runs = query.order_by(AnalysisRun.created_at.desc()).all()
     results = []
     for r in runs:
         results.append(
             AnalysisHistoryItem(
                 id=r.id,
+                user_id=r.user_id,
                 candidate_name=r.candidate_name,
                 role_profile_title=r.role_profile_title,
                 source_type=r.source_type,

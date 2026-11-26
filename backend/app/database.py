@@ -1,5 +1,5 @@
 import os
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -19,6 +19,19 @@ if DATABASE_URL.startswith("sqlite"):
 engine = create_engine(DATABASE_URL, echo=False, connect_args=connect_args)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
+
+
+def init_db():
+    Base.metadata.create_all(bind=engine)
+    with engine.connect() as conn:
+        try:
+            res = conn.execute(text("PRAGMA table_info(analysis_runs)")).fetchall()
+            col_names = [r[1] for r in res]
+            if "user_id" not in col_names:
+                conn.execute(text("ALTER TABLE analysis_runs ADD COLUMN user_id VARCHAR(50)"))
+                conn.commit()
+        except Exception:
+            pass
 
 
 def get_db():

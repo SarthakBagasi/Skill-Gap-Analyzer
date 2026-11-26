@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import InputPanel from "@/components/InputPanel";
 import GapSummaryCards from "@/components/GapSummaryCards";
 import EvidenceTable from "@/components/EvidenceTable";
@@ -78,6 +79,7 @@ const FALLBACK_ROLES: RoleProfile[] = [
 ];
 
 function AnalyzerContent() {
+  const { user, token } = useAuth();
   const searchParams = useSearchParams();
   const initialRoleParam = searchParams.get("role");
 
@@ -142,8 +144,18 @@ function AnalyzerContent() {
     setErrorMessage(null);
 
     try {
+      if (user && !formData.has("user_id")) {
+        formData.append("user_id", user.id);
+      }
+
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
       const res = await fetch(`${API_BASE}/api/analyze`, {
         method: "POST",
+        headers,
         body: formData,
       });
 

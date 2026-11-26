@@ -4,6 +4,7 @@ import Link from "next/link";
 import { History, ShieldAlert, Cpu, ArrowUpRight } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 import Navbar from "@/components/Navbar";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "AI-Based Skill Gap Analyzer | Career Decision-Support System",
@@ -19,7 +20,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased flex flex-col min-h-screen text-slate-900 bg-slate-50">
-        {/* Accessible Skip to Content Link */}
+        <AuthProvider>
+          {/* Accessible Skip to Content Link */}
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-indigo-600 focus:text-white focus:rounded-xl focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 text-xs font-bold"
@@ -130,6 +132,7 @@ export default function RootLayout({
             </div>
           </div>
         </footer>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -108,6 +108,7 @@ class AnalysisResponse(BaseModel):
 
 class AnalysisHistoryItem(BaseModel):
     id: str
+    user_id: Optional[str] = None
     candidate_name: str
     role_profile_title: str
     source_type: str
@@ -120,3 +121,34 @@ class AnalysisHistoryItem(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UserRegisterRequest(BaseModel):
+    username: str
+    password: str
+    full_name: str
+    email: Optional[str] = None
+    target_role_id: Optional[str] = None
+
+
+class UserLoginRequest(BaseModel):
+    username: str
+    password: str
+
+
+class UserResponse(BaseModel):
+    id: str
+    username: str
+    full_name: str
+    email: Optional[str] = None
+    role: str = "candidate"
+    target_role_id: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
+class AuthResponse(BaseModel):
+    user: UserResponse
+    token: str
+    message: str

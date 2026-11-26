@@ -38,10 +38,24 @@ class CuratedRecommendation(Base):
     difficulty = Column(String(50), default="Intermediate")
 
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(String(50), primary_key=True, index=True)
+    username = Column(String(100), unique=True, index=True, nullable=False)
+    email = Column(String(200), unique=True, nullable=True)
+    password_hash = Column(String(200), nullable=False)
+    full_name = Column(String(200), nullable=False)
+    role = Column(String(50), default="candidate")
+    target_role_id = Column(String(100), nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+
 class AnalysisRun(Base):
     __tablename__ = "analysis_runs"
 
     id = Column(String(50), primary_key=True, index=True)
+    user_id = Column(String(50), nullable=True, index=True)
     candidate_name = Column(String(200), default="Candidate")
     role_profile_id = Column(String(100), nullable=True)
     role_profile_title = Column(String(200), nullable=False)

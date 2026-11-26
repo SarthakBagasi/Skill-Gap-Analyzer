@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 import {
   FileText,
   History,
@@ -13,6 +14,9 @@ import {
   Menu,
   X,
   Home,
+  User as UserIcon,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 
 interface NavItem {
@@ -34,6 +38,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const checkIsActive = (href: string) => {
@@ -76,6 +81,41 @@ export default function Navbar() {
             </Link>
           );
         })}
+
+        {/* User Account Status Indicator */}
+        <div className="pl-1 sm:pl-2 sm:border-l sm:border-slate-200 flex items-center">
+          {user ? (
+            <div className="flex items-center gap-1">
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-bold text-slate-800 transition-colors"
+                title={`Signed in as ${user.full_name} (@${user.username})`}
+              >
+                <span className="w-5 h-5 rounded-full bg-indigo-600 text-white flex items-center justify-center text-[10px] font-black">
+                  {user.full_name.charAt(0)}
+                </span>
+                <span className="hidden md:inline max-w-[90px] truncate">{user.full_name.split(" ")[0]}</span>
+              </Link>
+              <button
+                type="button"
+                onClick={logout}
+                className="p-1.5 text-slate-400 hover:text-rose-600 rounded-lg hover:bg-rose-50 transition-colors"
+                title="Sign Out"
+                aria-label="Sign Out"
+              >
+                <LogOut className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-colors shadow-2xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
+            >
+              <LogIn className="w-3.5 h-3.5" aria-hidden="true" />
+              <span>Sign In</span>
+            </Link>
+          )}
+        </div>
 
         {/* Mobile Menu Toggle Button */}
         <button
@@ -122,6 +162,32 @@ export default function Navbar() {
               </Link>
             );
           })}
+
+          <div className="pt-2 border-t border-slate-100">
+            {user ? (
+              <div className="flex items-center justify-between p-2 bg-slate-50 rounded-xl">
+                <span className="text-xs font-bold text-slate-800">{user.full_name}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout();
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="text-xs text-rose-600 font-semibold"
+                >
+                  Sign Out
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full py-2.5 text-center text-xs font-bold bg-indigo-600 text-white rounded-xl block"
+              >
+                Sign In / Register
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </>

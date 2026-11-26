@@ -17,6 +17,7 @@ import {
   FileCheck2,
 } from "lucide-react";
 import { AnalysisHistoryItem, AnalysisResponse } from "@/types/analysis";
+import { useAuth } from "@/context/AuthContext";
 import GapSummaryCards from "@/components/GapSummaryCards";
 import EvidenceTable from "@/components/EvidenceTable";
 import LearningRoadmap from "@/components/LearningRoadmap";
@@ -24,6 +25,7 @@ import LearningRoadmap from "@/components/LearningRoadmap";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export default function HistoryPage() {
+  const { user, token, logout } = useAuth();
   const [historyItems, setHistoryItems] = useState<AnalysisHistoryItem[]>([]);
   const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,8 +35,14 @@ export default function HistoryPage() {
 
   const fetchHistory = async () => {
     setIsLoading(true);
+    setError(null);
     try {
-      const res = await fetch(`${API_BASE}/api/history`);
+      const url = user?.id ? `${API_BASE}/api/history?user_id=${user.id}` : `${API_BASE}/api/history`;
+      const headers: Record<string, string> = {};
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+      const res = await fetch(url, { headers });
       if (!res.ok) throw new Error("Failed to fetch analysis audit history");
       const data = await res.json();
       setHistoryItems(data);
@@ -47,7 +55,7 @@ export default function HistoryPage() {
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [user?.id, token]);
 
   const handleViewDetail = async (runId: string) => {
     setIsDetailLoading(true);
@@ -113,10 +121,12 @@ export default function HistoryPage() {
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-3">
             <History className="w-7 h-7 text-indigo-600 shrink-0" aria-hidden="true" />
-            Candidate Assessment Audit Records
+            {user ? `${user.full_name}'s Audit Records` : "Candidate Assessment Audit Records"}
           </h1>
           <p className="text-xs text-slate-500 mt-1 [text-wrap:pretty]">
-            Traceable audit trails and historical skill gap evaluations persisted for career decision support.
+            {user
+              ? `Personalized candidate evaluation history for ${user.email} (${user.role.toUpperCase()}).`
+              : "Traceable audit trails and historical skill gap evaluations persisted for career decision support."}
           </p>
         </div>
 
@@ -148,12 +158,69 @@ export default function HistoryPage() {
         </div>
       </div>
 
+      {/* Auth Status & Account Isolation Banner */}
+      {user ? (
+        <div className="bg-indigo-50/70 border border-indigo-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-2xs">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-indigo-600 text-white font-black flex items-center justify-center shrink-0 text-sm shadow-xs">
+              {user.username.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-slate-900 text-sm">{user.full_name}</span>
+                <span className="bg-indigo-100 text-indigo-700 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full">
+                  Candidate ID: {user.id}
+                </span>
+              </div>
+              <p className="text-slate-500 text-xs mt-0.5">
+                Target Role: <strong className="text-slate-700">{user.target_role_id || "General"}</strong> &bull; Only audits conducted under this account are displayed.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-start sm:self-auto">
+            <Link
+              href="/login"
+              className="px-3 py-1.5 rounded-lg border border-indigo-200 bg-white hover:bg-indigo-50 text-indigo-700 font-bold text-xs transition-colors shadow-2xs"
+            >
+              Switch Account
+            </Link>
+            <button
+              type="button"
+              onClick={logout}
+              className="px-3 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-slate-600 font-bold text-xs transition-colors shadow-2xs"
+            >
+              Sign Out
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-2xs">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-500 text-white font-bold flex items-center justify-center shrink-0 text-sm">
+              !
+            </div>
+            <div>
+              <span className="font-bold text-slate-900 text-sm">Shared Public Demo History</span>
+              <p className="text-slate-600 text-xs mt-0.5">
+                You are currently viewing shared public evaluation records. Sign in to maintain an isolated, private audit trail for your candidate resume.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/login"
+            className="px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs transition-colors shadow-2xs shrink-0 self-start sm:self-auto"
+          >
+            Sign In / Switch Candidate &rarr;
+          </Link>
+        </div>
+      )}
+
       {/* Quick Summary Stats Bar */}
       {!isLoading && !error && historyItems.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="craft-card rounded-xl p-4 border border-slate-200">
             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
-              Total Audits Persisted
+              {user ? "Personal Audits" : "Total Audits Persisted"}
             </span>
             <span className="text-xl font-mono font-black text-slate-900 tabular-nums">
               {historyItems.length}
@@ -202,16 +269,30 @@ export default function HistoryPage() {
           <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
             <FileCheck2 className="w-6 h-6" aria-hidden="true" />
           </div>
-          <h3 className="text-sm font-bold text-slate-900">No Assessment Records Found</h3>
+          <h3 className="text-sm font-bold text-slate-900">
+            {user ? `No Assessment Records for ${user.full_name}` : "No Assessment Records Found"}
+          </h3>
           <p className="text-xs text-slate-500 mt-1 [text-wrap:pretty]">
-            Run an analysis from the workspace to log explainable candidate evaluations into PostgreSQL/SQLite.
+            {user
+              ? "You haven't run any evaluations yet under this account. Ingest your resume in the Analyzer to record your private audit trail."
+              : "Run an analysis from the workspace to log explainable candidate evaluations into PostgreSQL/SQLite."}
           </p>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-1.5 mt-4 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus:outline-hidden"
-          >
-            Launch Analyzer Workspace
-          </Link>
+          <div className="flex items-center justify-center gap-3 mt-4">
+            <Link
+              href="/analyzer"
+              className="inline-flex items-center gap-1.5 text-xs font-bold bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus:outline-hidden"
+            >
+              Launch Analyzer Workspace
+            </Link>
+            {!user && (
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 px-4 py-2 rounded-xl shadow-2xs transition-colors"
+              >
+                Sign In
+              </Link>
+            )}
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

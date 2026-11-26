@@ -15,6 +15,8 @@ import {
   Award,
   Layers,
   Flame,
+  Play,
+  RefreshCw,
 } from "lucide-react";
 
 interface CompetencyDef {
@@ -189,46 +191,34 @@ interface InteractiveSandboxProps {
 
 export default function InteractiveSandbox({ onSelectRoleInWorkspace }: InteractiveSandboxProps) {
   const [activeRoleId, setActiveRoleId] = useState<string>("backend_developer");
+  const [hasRun, setHasRun] = useState<boolean>(false);
+
   const activeRole = useMemo(
     () => SANDBOX_ROLES.find((r) => r.id === activeRoleId) || SANDBOX_ROLES[0],
     [activeRoleId]
   );
 
-  // Map each competency to its state: acquired (1.0), partial (0.65), missing (0.0)
+  // Initialize clean without pre-filled mock data
   const [skillStates, setSkillStates] = useState<Record<string, "acquired" | "partial" | "missing">>(() => {
     const initial: Record<string, "acquired" | "partial" | "missing"> = {};
-    SANDBOX_ROLES[0].competencies.forEach((c, idx) => {
-      initial[c.id] = idx < 3 ? "acquired" : idx === 3 ? "partial" : "missing";
+    SANDBOX_ROLES[0].competencies.forEach((c) => {
+      initial[c.id] = "missing";
     });
     return initial;
   });
 
-  // Switch role handler: resets states to first preset or default distribution
+  // Switch role handler: resets states to clean initial state
   const handleSwitchRole = (roleId: string) => {
     setActiveRoleId(roleId);
+    setHasRun(false);
     const target = SANDBOX_ROLES.find((r) => r.id === roleId);
     if (target) {
-      if (target.presets.length > 0) {
-        setSkillStates({ ...target.presets[0].states });
-      } else {
-        const reset: Record<string, "acquired" | "partial" | "missing"> = {};
-        target.competencies.forEach((c, idx) => {
-          reset[c.id] = idx < 2 ? "acquired" : "missing";
-        });
-        setSkillStates(reset);
-      }
+      const reset: Record<string, "acquired" | "partial" | "missing"> = {};
+      target.competencies.forEach((c) => {
+        reset[c.id] = "missing";
+      });
+      setSkillStates(reset);
     }
-  };
-
-  const handleToggleState = (compKey: string) => {
-    setSkillStates((prev) => {
-      const current = prev[compKey] || "missing";
-      let next: "acquired" | "partial" | "missing" = "acquired";
-      if (current === "acquired") next = "partial";
-      else if (current === "partial") next = "missing";
-      else next = "acquired";
-      return { ...prev, [compKey]: next };
-    });
   };
 
   const handleSetState = (compKey: string, val: "acquired" | "partial" | "missing") => {
@@ -237,6 +227,7 @@ export default function InteractiveSandbox({ onSelectRoleInWorkspace }: Interact
 
   const handleApplyPreset = (presetStates: Record<string, "acquired" | "partial" | "missing">) => {
     setSkillStates({ ...presetStates });
+    setHasRun(true);
   };
 
   const handleReset = () => {
@@ -245,6 +236,11 @@ export default function InteractiveSandbox({ onSelectRoleInWorkspace }: Interact
       cleared[c.id] = "missing";
     });
     setSkillStates(cleared);
+    setHasRun(false);
+  };
+
+  const handleRunSimulation = () => {
+    setHasRun(true);
   };
 
   // Mathematical Real-Time Computations
@@ -322,10 +318,6 @@ export default function InteractiveSandbox({ onSelectRoleInWorkspace }: Interact
     if (onSelectRoleInWorkspace) {
       onSelectRoleInWorkspace(activeRoleId);
     }
-    const target = document.getElementById("workspace");
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
-    }
   };
 
   return (
@@ -335,14 +327,14 @@ export default function InteractiveSandbox({ onSelectRoleInWorkspace }: Interact
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-md mb-2">
             <Sliders className="w-3.5 h-3.5" aria-hidden="true" />
-            Live Interactive Playground
+            Interactive Simulation Playground
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            Instant Competency Simulator
+            Role Competency Simulator
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-xl [text-wrap:pretty]">
-            Toggle candidate skill proficiencies in real time. Observe how the <strong>Role Gap Index (G)</strong> and 
-            prerequisite-aware priority rankings update deterministically with zero latency.
+            Select proficiencies or test presets, then click <strong>Run Simulation</strong> to compute the 
+            <strong> Role Gap Index (G)</strong> and prerequisite priority rankings deterministically.
           </p>
         </div>
 
@@ -368,7 +360,7 @@ export default function InteractiveSandbox({ onSelectRoleInWorkspace }: Interact
         </div>
       </div>
 
-      {/* Preset Scenarios Strip */}
+      {/* Preset Scenarios & Action Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200 text-xs">
         <div className="flex items-center gap-2 text-slate-700">
           <Sparkles className="w-4 h-4 text-indigo-600 shrink-0" aria-hidden="true" />
@@ -394,20 +386,29 @@ export default function InteractiveSandbox({ onSelectRoleInWorkspace }: Interact
             title="Reset all competencies to missing"
           >
             <RotateCcw className="w-3.5 h-3.5" aria-hidden="true" />
-            <span>Reset</span>
+            <span>Clear</span>
           </button>
         </div>
       </div>
 
       {/* Main Grid: Competency Interactive Toggles (Left) + Dynamic Decision Output (Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-7">
-        {/* Left Column: Interactive Competencies (8 cols) */}
+        {/* Left Column: Interactive Competencies (7 cols) */}
         <div className="lg:col-span-7 space-y-3">
           <div className="flex items-center justify-between text-xs pb-1 text-slate-500">
             <span className="font-bold text-slate-700 uppercase tracking-wider text-[11px]">
               Role Competencies ({activeRole.competencies.length})
             </span>
-            <span>Click pills to cycle: Acquired &rarr; Partial &rarr; Missing</span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleRunSimulation}
+                className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs transition-colors shadow-2xs"
+              >
+                <Play className="w-3 h-3 fill-white" aria-hidden="true" />
+                <span>{hasRun ? "Recalculate Alignment" : "Run Simulation"}</span>
+              </button>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -421,11 +422,13 @@ export default function InteractiveSandbox({ onSelectRoleInWorkspace }: Interact
                 <div
                   key={comp.id}
                   className={`p-3.5 rounded-xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
-                    isAcquired
-                      ? "bg-emerald-50/40 border-emerald-200"
-                      : isPartial
-                      ? "bg-amber-50/40 border-amber-200"
-                      : "bg-slate-50/60 border-slate-200"
+                    hasRun
+                      ? isAcquired
+                        ? "bg-emerald-50/40 border-emerald-200"
+                        : isPartial
+                        ? "bg-amber-50/40 border-amber-200"
+                        : "bg-slate-50/60 border-slate-200"
+                      : "bg-slate-50/50 border-slate-200"
                   }`}
                 >
                   <div className="space-y-1">
@@ -493,11 +496,52 @@ export default function InteractiveSandbox({ onSelectRoleInWorkspace }: Interact
 
         {/* Right Column: Live Calculated Decision Metrics (5 cols) */}
         <div className="lg:col-span-5 space-y-5">
-          <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6">
-            <div className="text-center space-y-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block">
-                Calculated Role Alignment
-              </span>
+          {!hasRun ? (
+            /* Unran Initial Prompt State */
+            <div className="bg-slate-50 p-8 rounded-2xl border border-slate-200 text-center space-y-5">
+              <div className="w-16 h-16 mx-auto rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600">
+                <Sliders className="w-8 h-8" aria-hidden="true" />
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-base font-bold text-slate-900">
+                  Ready to Simulate
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed max-w-sm mx-auto [text-wrap:pretty]">
+                  Select competency proficiencies on the left or click a scenario preset above, 
+                  then execute the simulation to compute alignment metrics.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleRunSimulation}
+                className="w-full py-3.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/15 flex items-center justify-center gap-2 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
+              >
+                <Play className="w-4 h-4 fill-white" aria-hidden="true" />
+                <span>Run Simulation &amp; Calculate Alignment</span>
+              </button>
+
+              <p className="text-[11px] text-slate-400">
+                Computes Gap Index ($G$), alignment percentage, and priority tie-breaking.
+              </p>
+            </div>
+          ) : (
+            /* Calculated Results State when ran */
+            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-6 animate-fadeIn">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                  Calculated Role Alignment
+                </span>
+                <button
+                  type="button"
+                  onClick={handleRunSimulation}
+                  className="text-[11px] font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+                >
+                  <RefreshCw className="w-3 h-3" aria-hidden="true" />
+                  <span>Update</span>
+                </button>
+              </div>
 
               {/* Live Animated Circular SVG Gauge */}
               <div className="relative w-36 h-36 mx-auto flex items-center justify-center">
@@ -537,81 +581,81 @@ export default function InteractiveSandbox({ onSelectRoleInWorkspace }: Interact
               </div>
 
               {/* Status Badge */}
-              <div className="pt-1">
+              <div className="text-center pt-1">
                 <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full border ${scoreTheme.bg} ${scoreTheme.text} ${scoreTheme.border}`}>
                   {scoreTheme.badge}
                 </span>
               </div>
-            </div>
 
-            {/* Gap Index & Breakdown Stats */}
-            <div className="grid grid-cols-2 gap-3 pt-2">
-              <div className="bg-white p-3 rounded-xl border border-slate-200 text-center">
-                <span className="text-[10px] text-slate-500 uppercase font-bold block">
-                  Role Gap Index (G)
-                </span>
-                <span className="text-base font-black font-mono text-slate-900 tabular-nums">
-                  {stats.gapIndex.toFixed(3)}
-                </span>
-                <span className="text-[10px] text-slate-500 block">Deficit normalized</span>
-              </div>
-
-              <div className="bg-white p-3 rounded-xl border border-slate-200 text-center">
-                <span className="text-[10px] text-slate-500 uppercase font-bold block">
-                  Competency Status
-                </span>
-                <span className="text-base font-black font-mono text-slate-900 tabular-nums">
-                  {stats.acquiredCount}/{stats.scoredCompetencies.length}
-                </span>
-                <span className="text-[10px] text-emerald-600 font-semibold block">
-                  {stats.partialCount} Partial &bull; {stats.missingCount} Missing
-                </span>
-              </div>
-            </div>
-
-            {/* Top Recommended Priority Callout */}
-            {stats.highPriorityNext ? (
-              <div className="bg-white p-4 rounded-xl border border-indigo-200 space-y-2">
-                <div className="flex items-center gap-2 text-xs font-bold text-indigo-700">
-                  <Flame className="w-4 h-4 text-orange-500 shrink-0" aria-hidden="true" />
-                  <span>Next Priority Recommendation</span>
+              {/* Gap Index & Breakdown Stats */}
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <div className="bg-white p-3 rounded-xl border border-slate-200 text-center">
+                  <span className="text-[10px] text-slate-500 uppercase font-bold block">
+                    Role Gap Index (G)
+                  </span>
+                  <span className="text-base font-black font-mono text-slate-900 tabular-nums">
+                    {stats.gapIndex.toFixed(3)}
+                  </span>
+                  <span className="text-[10px] text-slate-500 block">Deficit normalized</span>
                 </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-900">{stats.highPriorityNext.name}</span>
-                  <span className="font-mono text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
-                    Priority Score: {stats.highPriorityNext.priorityScore.toFixed(3)}
+
+                <div className="bg-white p-3 rounded-xl border border-slate-200 text-center">
+                  <span className="text-[10px] text-slate-500 uppercase font-bold block">
+                    Competency Status
+                  </span>
+                  <span className="text-base font-black font-mono text-slate-900 tabular-nums">
+                    {stats.acquiredCount}/{stats.scoredCompetencies.length}
+                  </span>
+                  <span className="text-[10px] text-emerald-600 font-semibold block">
+                    {stats.partialCount} Partial &bull; {stats.missingCount} Missing
                   </span>
                 </div>
-                <p className="text-[11px] text-slate-600 leading-relaxed">
-                  {stats.highPriorityNext.isFoundation
-                    ? "Contains a +0.25 Foundation Blocker Bonus. Mastering this competency unlocks multiple higher-level prerequisites."
-                    : "Carries substantial requirement weight with zero current coverage. Closing this delivers the highest alignment gain."}
+              </div>
+
+              {/* Top Recommended Priority Callout */}
+              {stats.highPriorityNext ? (
+                <div className="bg-white p-4 rounded-xl border border-indigo-200 space-y-2">
+                  <div className="flex items-center gap-2 text-xs font-bold text-indigo-700">
+                    <Flame className="w-4 h-4 text-orange-500 shrink-0" aria-hidden="true" />
+                    <span>Next Priority Recommendation</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-bold text-slate-900">{stats.highPriorityNext.name}</span>
+                    <span className="font-mono text-indigo-600 font-bold bg-indigo-50 px-2 py-0.5 rounded border border-indigo-100">
+                      Priority Score: {stats.highPriorityNext.priorityScore.toFixed(3)}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    {stats.highPriorityNext.isFoundation
+                      ? "Contains a +0.25 Foundation Blocker Bonus. Mastering this competency unlocks multiple higher-level prerequisites."
+                      : "Carries substantial requirement weight with zero current coverage. Closing this delivers the highest alignment gain."}
+                  </p>
+                </div>
+              ) : (
+                <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
+                  <Award className="w-5 h-5 text-emerald-600 shrink-0" aria-hidden="true" />
+                  <span>
+                    <strong>Full Alignment Achieved!</strong> Complete coverage across all {activeRole.title} requirements.
+                  </span>
+                </div>
+              )}
+
+              {/* CTA to Full Workspace */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleLaunchWorkspace}
+                  className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/15 flex items-center justify-center gap-2 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+                >
+                  <span>Audit Your Real Resume in Workspace</span>
+                  <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                </button>
+                <p className="text-[10px] text-slate-500 text-center mt-2">
+                  Supports PDF, DOCX, and text resumes with zero generative hallucination.
                 </p>
               </div>
-            ) : (
-              <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
-                <Award className="w-5 h-5 text-emerald-600 shrink-0" aria-hidden="true" />
-                <span>
-                  <strong>Full Alignment Achieved!</strong> Candidate demonstrates complete coverage across all {activeRole.title} requirements.
-                </span>
-              </div>
-            )}
-
-            {/* CTA to Full Workspace */}
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={handleLaunchWorkspace}
-                className="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/15 flex items-center justify-center gap-2 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
-              >
-                <span>Audit Your Real Resume in Workspace</span>
-                <ArrowRight className="w-4 h-4" aria-hidden="true" />
-              </button>
-              <p className="text-[10px] text-slate-500 text-center mt-2">
-                Supports PDF, DOCX, and text resumes with zero generative hallucination.
-              </p>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
