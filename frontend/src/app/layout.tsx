@@ -1,8 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { History, ShieldAlert, Cpu, ArrowUpRight, FileText, Sliders, Layers, HelpCircle } from "lucide-react";
+import { History, ShieldAlert, Cpu, ArrowUpRight } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
+import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
   title: "AI-Based Skill Gap Analyzer | Career Decision-Support System",
@@ -61,52 +62,7 @@ export default function RootLayout({
               <BrandLogo size="md" showText={true} />
             </Link>
 
-            <nav className="flex items-center gap-1 sm:gap-2" aria-label="Main Navigation">
-              <Link
-                href="/"
-                className="text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
-              >
-                Home
-              </Link>
-              <Link
-                href="/analyzer"
-                className="text-xs sm:text-sm font-bold px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-2xs flex items-center gap-1.5"
-              >
-                <FileText className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
-                <span>Analyzer</span>
-              </Link>
-              <Link
-                href="/sandbox"
-                className="hidden sm:inline-flex text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
-              >
-                Sandbox
-              </Link>
-              <Link
-                href="/architecture"
-                className="hidden md:inline-flex text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
-              >
-                Architecture
-              </Link>
-              <Link
-                href="/compare"
-                className="hidden lg:inline-flex text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
-              >
-                Compare
-              </Link>
-              <Link
-                href="/history"
-                className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
-              >
-                <History className="w-3.5 h-3.5 text-slate-400" aria-hidden="true" />
-                <span>History</span>
-              </Link>
-              <Link
-                href="/faq"
-                className="hidden sm:inline-flex text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
-              >
-                FAQ
-              </Link>
-            </nav>
+            <Navbar />
           </div>
         </header>
 
