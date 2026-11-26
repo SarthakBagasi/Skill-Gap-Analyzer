@@ -1,7 +1,7 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { History, ShieldAlert, Cpu, ArrowUpRight } from "lucide-react";
+import { History, ShieldAlert, Cpu, ArrowUpRight, FileText, Sliders, Layers, HelpCircle } from "lucide-react";
 import BrandLogo from "@/components/BrandLogo";
 
 export const metadata: Metadata = {
@@ -61,27 +61,51 @@ export default function RootLayout({
               <BrandLogo size="md" showText={true} />
             </Link>
 
-            <nav className="flex items-center gap-1.5 sm:gap-2.5" aria-label="Main Navigation">
+            <nav className="flex items-center gap-1 sm:gap-2" aria-label="Main Navigation">
               <Link
                 href="/"
-                className="text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
+                className="text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
               >
-                Analyzer Workspace
+                Home
+              </Link>
+              <Link
+                href="/analyzer"
+                className="text-xs sm:text-sm font-bold px-3 py-1.5 rounded-xl bg-indigo-50 text-indigo-700 hover:bg-indigo-100 border border-indigo-200 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-2xs flex items-center gap-1.5"
+              >
+                <FileText className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
+                <span>Analyzer</span>
+              </Link>
+              <Link
+                href="/sandbox"
+                className="hidden sm:inline-flex text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
+              >
+                Sandbox
+              </Link>
+              <Link
+                href="/architecture"
+                className="hidden md:inline-flex text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
+              >
+                Architecture
+              </Link>
+              <Link
+                href="/compare"
+                className="hidden lg:inline-flex text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
+              >
+                Compare
               </Link>
               <Link
                 href="/history"
-                className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold px-3.5 py-2 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1"
+                className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
               >
-                <History className="w-4 h-4 text-slate-400" aria-hidden="true" />
-                Audit History
+                <History className="w-3.5 h-3.5 text-slate-400" aria-hidden="true" />
+                <span>History</span>
               </Link>
-              <a
-                href="#how-it-works"
-                className="hidden md:inline-flex items-center gap-1 text-xs font-semibold px-3.5 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-colors shadow-2xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+              <Link
+                href="/faq"
+                className="hidden sm:inline-flex text-xs sm:text-sm font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl text-slate-700 hover:text-indigo-600 hover:bg-slate-100 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
               >
-                Methodology
-                <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" aria-hidden="true" />
-              </a>
+                FAQ
+              </Link>
             </nav>
           </div>
         </header>
@@ -107,14 +131,28 @@ export default function RootLayout({
                 </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-4 text-xs">
+              <div className="flex flex-wrap items-center gap-3 text-xs">
+                <Link href="/" className="hover:text-indigo-600 transition-colors">Home</Link>
+                <span aria-hidden="true">&bull;</span>
+                <Link href="/analyzer" className="hover:text-indigo-600 transition-colors font-semibold text-indigo-700">Analyzer</Link>
+                <span aria-hidden="true">&bull;</span>
+                <Link href="/sandbox" className="hover:text-indigo-600 transition-colors">Sandbox</Link>
+                <span aria-hidden="true">&bull;</span>
+                <Link href="/architecture" className="hover:text-indigo-600 transition-colors">Architecture</Link>
+                <span aria-hidden="true">&bull;</span>
+                <Link href="/compare" className="hover:text-indigo-600 transition-colors">Compare</Link>
+                <span aria-hidden="true">&bull;</span>
+                <Link href="/history" className="hover:text-indigo-600 transition-colors">History</Link>
+                <span aria-hidden="true">&bull;</span>
+                <Link href="/faq" className="hover:text-indigo-600 transition-colors">FAQ</Link>
+                <span aria-hidden="true">&bull;</span>
                 <a
                   href="https://github.com/SarthakBagasi/Skill-Gap-Analyzer"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg border border-indigo-200 transition-colors"
+                  className="inline-flex items-center gap-1 font-semibold text-indigo-600 hover:text-indigo-800 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded-md border border-indigo-200 transition-colors"
                 >
-                  GitHub Repository
+                  GitHub
                   <ArrowUpRight className="w-3 h-3" aria-hidden="true" />
                 </a>
               </div>

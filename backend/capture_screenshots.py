@@ -36,10 +36,10 @@ def capture_all():
 
     try:
         # -------------------------------------------------------------
-        # Screen 1: Input & Role Selection screen
+        # Screen 1: Input & Role Selection screen (/analyzer)
         # -------------------------------------------------------------
-        print("[2/5] Navigating to http://localhost:3000...")
-        driver.get("http://localhost:3000")
+        print("[2/5] Navigating to http://localhost:3000/analyzer...")
+        driver.get("http://localhost:3000/analyzer")
         time.sleep(2)
 
         # Scroll to top to capture Hero + Value Badges + Interactive Mini-Sandbox
