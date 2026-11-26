@@ -6,6 +6,10 @@ import GapSummaryCards from "@/components/GapSummaryCards";
 import EvidenceTable from "@/components/EvidenceTable";
 import LearningRoadmap from "@/components/LearningRoadmap";
 import CommandPalette, { CommandItem } from "@/components/CommandPalette";
+import InteractiveSandbox from "@/components/InteractiveSandbox";
+import PipelineExplorer from "@/components/PipelineExplorer";
+import ComparisonSection from "@/components/ComparisonSection";
+import FaqSection from "@/components/FaqSection";
 import { RoleProfile, AnalysisResponse } from "@/types/analysis";
 import {
   Sparkles,
@@ -24,6 +28,11 @@ import {
   FileCheck2,
   ArrowUp,
   User,
+  ArrowDown,
+  ShieldCheck,
+  Zap,
+  CheckCircle2,
+  BookOpen,
 } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -180,133 +189,232 @@ export default function HomePage() {
     }, 100);
   };
 
+  const handleSelectRoleInWorkspace = (roleId: string) => {
+    setSelectedRoleId(roleId);
+    triggerToast(`Selected target role: ${roleId.replace(/_/g, " ")}`);
+  };
+
   // Command Palette Items
-  const commands: CommandItem[] = useMemo(() => [
-    {
-      id: "persona-alex",
-      title: "Alex Johnson (Backend Developer)",
-      category: "Personas",
-      description: "FastAPI, PostgreSQL, Redis, Docker, Pytest",
-      icon: User,
-      action: () => {
-        setSelectedRoleId("backend_developer");
-        triggerToast("Selected persona: Alex Johnson");
-        document.getElementById("candidate-name-input")?.scrollIntoView({ behavior: "smooth" });
+  const commands: CommandItem[] = useMemo(
+    () => [
+      {
+        id: "jump-sandbox",
+        title: "Jump to Competency Sandbox",
+        category: "Navigation",
+        description: "Interactive real-time Gap Index simulator and SVG gauge",
+        icon: Sliders,
+        action: () => {
+          document.getElementById("interactive-sandbox")?.scrollIntoView({ behavior: "smooth" });
+        },
+        shortcut: "S",
       },
-      shortcut: "1",
-    },
-    {
-      id: "persona-priya",
-      title: "Priya Sharma (Data Scientist)",
-      category: "Personas",
-      description: "Pandas, NumPy, Scikit-Learn, Statistics, SQL",
-      icon: User,
-      action: () => {
-        setSelectedRoleId("data_scientist");
-        triggerToast("Selected persona: Priya Sharma");
-        document.getElementById("candidate-name-input")?.scrollIntoView({ behavior: "smooth" });
+      {
+        id: "jump-pipeline",
+        title: "Jump to 3-Stage Pipeline Explorer",
+        category: "Navigation",
+        description: "Inspect Token Guardian, spaCy + S-BERT engine, and DAG",
+        icon: Cpu,
+        action: () => {
+          document.getElementById("pipeline-explorer")?.scrollIntoView({ behavior: "smooth" });
+        },
+        shortcut: "P",
       },
-      shortcut: "2",
-    },
-    {
-      id: "persona-marcus",
-      title: "Marcus Vance (Machine Learning Engineer)",
-      category: "Personas",
-      description: "PyTorch, Deep Learning, MLOps, Docker, FastAPI",
-      icon: User,
-      action: () => {
-        setSelectedRoleId("ml_engineer");
-        triggerToast("Selected persona: Marcus Vance");
-        document.getElementById("candidate-name-input")?.scrollIntoView({ behavior: "smooth" });
+      {
+        id: "jump-comparison",
+        title: "Jump to Architectural Comparison",
+        category: "Navigation",
+        description: "Traditional ATS vs Generative LLM vs Deterministic AI",
+        icon: Layers,
+        action: () => {
+          document.getElementById("comparison-section")?.scrollIntoView({ behavior: "smooth" });
+        },
       },
-      shortcut: "3",
-    },
-    {
-      id: "jump-summary",
-      title: "Jump to Skill-Gap Summary Cards",
-      category: "Navigation",
-      description: "View Gap Index (G), overall match score, and gauge",
-      icon: TrendingUp,
-      action: () => {
-        document.getElementById("analysis-results")?.scrollIntoView({ behavior: "smooth" });
+      {
+        id: "jump-faq",
+        title: "Jump to Methodology FAQ",
+        category: "Navigation",
+        description: "Frequently asked questions and technical justifications",
+        icon: BookOpen,
+        action: () => {
+          document.getElementById("faq-section")?.scrollIntoView({ behavior: "smooth" });
+        },
       },
-    },
-    {
-      id: "jump-matrix",
-      title: "Jump to Explainability Matrix",
-      category: "Navigation",
-      description: "View requirement breakdown, cosine similarity & rationales",
-      icon: FileCheck2,
-      action: () => {
-        document.getElementById("evidence-matrix")?.scrollIntoView({ behavior: "smooth" });
+      {
+        id: "jump-workspace",
+        title: "Jump to Full Analyzer Workspace",
+        category: "Navigation",
+        description: "Upload resume (PDF, DOCX) or select test personas",
+        icon: FileText,
+        action: () => {
+          document.getElementById("workspace")?.scrollIntoView({ behavior: "smooth" });
+        },
+        shortcut: "W",
       },
-    },
-    {
-      id: "jump-roadmap",
-      title: "Jump to Prioritized Learning Roadmap",
-      category: "Navigation",
-      description: "Inspect sequenced curriculum, tasks, and documentation",
-      icon: Compass,
-      action: () => {
-        document.getElementById("roadmap-items-container")?.scrollIntoView({ behavior: "smooth" });
+      {
+        id: "persona-alex",
+        title: "Alex Johnson (Backend Developer)",
+        category: "Personas",
+        description: "FastAPI, PostgreSQL, Redis, Docker, Pytest",
+        icon: User,
+        action: () => {
+          setSelectedRoleId("backend_developer");
+          triggerToast("Selected persona: Alex Johnson");
+          document.getElementById("candidate-name-input")?.scrollIntoView({ behavior: "smooth" });
+        },
+        shortcut: "1",
       },
-    },
-    {
-      id: "math-modal",
-      title: "Inspect Mathematical Formulas",
-      category: "Export & Actions",
-      description: "View deterministic Gap Index (G) and ranking equations",
-      icon: Calculator,
-      action: () => setShowMathModal(true),
-      shortcut: "M",
-    },
-    {
-      id: "print-pdf",
-      title: "Print / Save Assessment as PDF",
-      category: "Export & Actions",
-      description: "Export clean executive decision-support audit document",
-      icon: Printer,
-      action: () => window.print(),
-      shortcut: "⌘P",
-    },
-  ], []);
+      {
+        id: "persona-priya",
+        title: "Priya Sharma (Data Scientist)",
+        category: "Personas",
+        description: "Pandas, NumPy, Scikit-Learn, Statistics, SQL",
+        icon: User,
+        action: () => {
+          setSelectedRoleId("data_scientist");
+          triggerToast("Selected persona: Priya Sharma");
+          document.getElementById("candidate-name-input")?.scrollIntoView({ behavior: "smooth" });
+        },
+        shortcut: "2",
+      },
+      {
+        id: "persona-marcus",
+        title: "Marcus Vance (Machine Learning Engineer)",
+        category: "Personas",
+        description: "PyTorch, Deep Learning, MLOps, Docker, FastAPI",
+        icon: User,
+        action: () => {
+          setSelectedRoleId("ml_engineer");
+          triggerToast("Selected persona: Marcus Vance");
+          document.getElementById("candidate-name-input")?.scrollIntoView({ behavior: "smooth" });
+        },
+        shortcut: "3",
+      },
+      {
+        id: "jump-summary",
+        title: "Jump to Skill-Gap Summary Cards",
+        category: "Navigation",
+        description: "View Gap Index (G), overall match score, and gauge",
+        icon: TrendingUp,
+        action: () => {
+          document.getElementById("analysis-results")?.scrollIntoView({ behavior: "smooth" });
+        },
+      },
+      {
+        id: "jump-matrix",
+        title: "Jump to Explainability Matrix",
+        category: "Navigation",
+        description: "View requirement breakdown, cosine similarity & rationales",
+        icon: FileCheck2,
+        action: () => {
+          document.getElementById("evidence-matrix")?.scrollIntoView({ behavior: "smooth" });
+        },
+      },
+      {
+        id: "jump-roadmap",
+        title: "Jump to Prioritized Learning Roadmap",
+        category: "Navigation",
+        description: "Inspect sequenced curriculum, tasks, and documentation",
+        icon: Compass,
+        action: () => {
+          document.getElementById("roadmap-items-container")?.scrollIntoView({ behavior: "smooth" });
+        },
+      },
+      {
+        id: "math-modal",
+        title: "Inspect Mathematical Formulas",
+        category: "Export & Actions",
+        description: "View deterministic Gap Index (G) and ranking equations",
+        icon: Calculator,
+        action: () => setShowMathModal(true),
+        shortcut: "M",
+      },
+      {
+        id: "print-pdf",
+        title: "Print / Save Assessment as PDF",
+        category: "Export & Actions",
+        description: "Export clean executive decision-support audit document",
+        icon: Printer,
+        action: () => window.print(),
+        shortcut: "⌘P",
+      },
+    ],
+    []
+  );
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-16">
       {/* Accessible Live Toast Notification */}
       {toastMessage && (
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl border border-slate-700 text-xs font-semibold flex items-center gap-2.5"
+          className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-xl border border-slate-700 text-xs font-semibold flex items-center gap-2.5 animate-fadeIn"
         >
           <Sparkles className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Hero Header */}
-      <section className="text-center max-w-3xl mx-auto space-y-4 pt-2">
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight [text-wrap:balance]">
-          AI-Based Skill Gap Analyzer
+      {/* 1. Hero Header Section */}
+      <section className="text-center max-w-4xl mx-auto space-y-6 pt-4 pb-2" aria-label="Hero Overview">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-xs font-bold text-indigo-700 shadow-2xs">
+          <ShieldCheck className="w-4 h-4 text-indigo-600" aria-hidden="true" />
+          <span>Deterministic NLP Pipeline &bull; Zero Generative Hallucinations</span>
+        </div>
+
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight [text-wrap:balance]">
+          AI-Powered Skill Gap Analyzer &amp; Prioritized Career Roadmap
         </h1>
 
-        <p className="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl mx-auto [text-wrap:pretty]">
-          Intelligent career skill assessment and explainable recommendation decision-support.
-          Extract candidate technical skills from resumes (PDF, DOCX, or text) and benchmark them
-          against industry role competencies using <strong>spaCy + Sentence-BERT semantic similarity</strong>.
+        <p className="text-sm sm:text-base lg:text-lg text-slate-600 leading-relaxed max-w-2xl mx-auto [text-wrap:pretty]">
+          Empowering candidates and institutions with mathematical career alignment. Ingest resumes (PDF, DOCX) 
+          and audit technical competencies with <strong>spaCy PhraseMatcher</strong>, <strong>Sentence-BERT cosine similarity</strong>, 
+          and <strong>prerequisite-aware DAG sequencing</strong>.
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+        {/* Value Badges Strip */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 pt-1 text-xs text-slate-600">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-lg border border-slate-200 shadow-2xs font-medium">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" aria-hidden="true" />
+            100% Deterministic Reproducibility
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-lg border border-slate-200 shadow-2xs font-medium">
+            <Zap className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
+            &lt;15ms Dense Vector Embeddings
+          </span>
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white rounded-lg border border-slate-200 shadow-2xs font-medium">
+            <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
+            Symbol Protection (C++, C#, .NET, CI/CD)
+          </span>
+        </div>
+
+        {/* Hero Interactive CTAs */}
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+          <a
+            href="#workspace"
+            className="text-xs sm:text-sm font-bold px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-2"
+          >
+            <span>Launch Analyzer Workspace</span>
+            <ArrowDown className="w-4 h-4" aria-hidden="true" />
+          </a>
+
+          <a
+            href="#interactive-sandbox"
+            className="text-xs sm:text-sm font-bold px-5 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-2"
+          >
+            <Sliders className="w-4 h-4 text-indigo-600" aria-hidden="true" />
+            <span>Try Live Mini-Sandbox</span>
+          </a>
+
           <button
             type="button"
             onClick={() => setIsCommandPaletteOpen(true)}
             aria-label="Open keyboard command palette"
-            className="text-xs font-semibold px-4 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-2"
+            className="text-xs font-semibold px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-2"
           >
-            <Keyboard className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
+            <Keyboard className="w-3.5 h-3.5 text-slate-600" aria-hidden="true" />
             <span>Command Palette</span>
-            <kbd className="px-1.5 py-0.5 bg-white border border-indigo-200 rounded font-mono text-[10px] font-bold text-indigo-700">⌘K</kbd>
+            <kbd className="px-1.5 py-0.5 bg-white border border-slate-300 rounded font-mono text-[10px] font-bold text-slate-700">⌘K</kbd>
           </button>
 
           <button
@@ -314,16 +422,46 @@ export default function HomePage() {
             onClick={() => setShowMathModal(true)}
             aria-haspopup="dialog"
             aria-expanded={showMathModal}
-            className="text-xs font-semibold px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-2"
+            className="text-xs font-semibold px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-2"
           >
             <Calculator className="w-4 h-4 text-indigo-600" aria-hidden="true" />
-            Inspect Mathematical Formulations
+            <span>Formulas (G)</span>
           </button>
         </div>
       </section>
 
-      {/* Input Panel Workspace */}
-      <section aria-label="Resume Ingestion and Target Role Workspace">
+      {/* 2. Interactive Competency Sandbox */}
+      <section aria-label="Interactive Competency Simulator">
+        <InteractiveSandbox onSelectRoleInWorkspace={handleSelectRoleInWorkspace} />
+      </section>
+
+      {/* 3. 3-Stage Architecture Pipeline Explorer */}
+      <section aria-label="Deterministic NLP Architecture Pipeline">
+        <PipelineExplorer />
+      </section>
+
+      {/* 4. Architectural Comparison Showcase */}
+      <section aria-label="Comparison with Legacy Systems and Generative Models">
+        <ComparisonSection />
+      </section>
+
+      {/* 5. Resume Ingestion & Target Role Workspace */}
+      <section id="workspace" className="space-y-6 scroll-mt-20" aria-label="Resume Ingestion and Target Role Workspace">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+          <div>
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-md mb-1.5">
+              <FileText className="w-3.5 h-3.5" aria-hidden="true" />
+              Production Workspace
+            </div>
+            <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              Audit Real Candidate Resumes
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 mt-0.5">
+              Upload your resume (PDF, DOCX) or click a pre-filled persona to test the deterministic analysis pipeline.
+            </p>
+          </div>
+        </div>
+
         <InputPanel
           roles={roles}
           selectedRoleId={selectedRoleId}
@@ -349,7 +487,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* Analysis Results View */}
+      {/* 6. Analysis Results View (When Active) */}
       {analysis && (
         <section id="analysis-results" className="space-y-10 pt-4" aria-label="Skill Gap Assessment Results">
           {/* Results Action Bar */}
@@ -439,68 +577,6 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Mathematical Formulations Explainer Modal */}
-      {showMathModal && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="math-modal-title"
-          className="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn"
-        >
-          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl border border-slate-200 space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                  <Calculator className="w-5 h-5" aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 id="math-modal-title" className="text-lg font-bold text-slate-900">
-                    Mathematical Framework & Formulas
-                  </h3>
-                  <p className="text-xs text-slate-500">
-                    Deterministic career decision-support formulations
-                  </p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowMathModal(false)}
-                aria-label="Close mathematical framework dialog"
-                className="text-xs font-semibold text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
-              >
-                <X className="w-4 h-4" aria-hidden="true" />
-              </button>
-            </div>
-
-            <div className="space-y-4 text-xs">
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <h4 className="font-bold text-slate-900 mb-1">
-                  1. Role Skill-Gap Index (G) Formulation
-                </h4>
-                <p className="font-mono text-indigo-700 font-bold bg-white p-2.5 rounded-lg border border-slate-200 mb-2">
-                  G = 1.0 - ( Σ (w_j · s_j) / Σ w_j )
-                </p>
-                <p className="text-slate-600 leading-relaxed">
-                  Where w_j is the requirement weight and s_j is the candidate match score. Exact keyword matches yield s_j = 1.0; semantic vector matches compute cosine similarity s_j ∈ [0.45, 1.0].
-                </p>
-              </div>
-
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <h4 className="font-bold text-slate-900 mb-1">
-                  2. Priority Ranking & Prerequisite Tie-Breaking
-                </h4>
-                <p className="font-mono text-indigo-700 font-bold bg-white p-2.5 rounded-lg border border-slate-200 mb-2">
-                  p_j = w_j · (1.0 - s_j) + foundation_bonus - readiness_penalty
-                </p>
-                <p className="text-slate-600 leading-relaxed">
-                  Missing skills that serve as prerequisites for other missing competencies receive a foundation bonus (+0.25) so students sequence core fundamentals before advanced frameworks.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Pre-Analysis Deliverables Preview when analysis is not yet run */}
       {!analysis && !isLoading && (
         <section className="craft-card rounded-2xl p-6 sm:p-8 space-y-6" aria-label="Analysis Deliverables Preview">
@@ -545,62 +621,72 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* How it Works / Methodology Section */}
-      <section
-        id="how-it-works"
-        className="craft-card rounded-2xl p-8 sm:p-10 space-y-8"
-        aria-label="Academic Architecture and Pipeline Methodology"
-      >
-        <div className="border-b border-slate-100 pb-5">
-          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-            How Deterministic Skill Gap Analysis Operates
-          </h2>
-          <p className="text-xs text-slate-500 mt-1 max-w-2xl">
-            Deterministic NLP pipeline combining token-preserving ingestion, dictionary phrase matching, and Sentence-BERT vector representations.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-slate-50/80 rounded-xl p-6 border border-slate-200 space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-md">
-              <FileText className="w-3.5 h-3.5" aria-hidden="true" />
-              Stage 1
-            </div>
-            <h3 className="text-sm font-bold text-slate-900">
-              High-Fidelity Document Ingestion
-            </h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Resumes are parsed via PyMuPDF and python-docx. Technical symbols (C++, C#, .NET, CI/CD, Node.js) are explicitly protected from regex truncation.
-            </p>
-          </div>
-
-          <div className="bg-slate-50/80 rounded-xl p-6 border border-slate-200 space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-md">
-              <Cpu className="w-3.5 h-3.5" aria-hidden="true" />
-              Stage 2
-            </div>
-            <h3 className="text-sm font-bold text-slate-900">
-              Hybrid spaCy + S-BERT Engine
-            </h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              spaCy PhraseMatcher evaluates 60+ canonical skills and aliases. Sentence-BERT all-MiniLM-L6-v2 evaluates semantic proximity without LLM hallucinations.
-            </p>
-          </div>
-
-          <div className="bg-slate-50/80 rounded-xl p-6 border border-slate-200 space-y-3">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2.5 py-1 rounded-md">
-              <Layers className="w-3.5 h-3.5" aria-hidden="true" />
-              Stage 3
-            </div>
-            <h3 className="text-sm font-bold text-slate-900">
-              Traceable Decision-Support
-            </h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Outputs an explainability matrix, Gap Index (G), and sequenced learning roadmap with official documentation links and portfolio deliverables.
-            </p>
-          </div>
-        </div>
+      {/* 7. Frequently Asked Questions Section */}
+      <section aria-label="Frequently Asked Questions">
+        <FaqSection />
       </section>
+
+      {/* Mathematical Formulations Explainer Modal */}
+      {showMathModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="math-modal-title"
+          className="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn"
+        >
+          <div className="bg-white rounded-2xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl border border-slate-200 space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                  <Calculator className="w-5 h-5" aria-hidden="true" />
+                </div>
+                <div>
+                  <h3 id="math-modal-title" className="text-lg font-bold text-slate-900">
+                    Mathematical Framework &amp; Formulas
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Deterministic career decision-support formulations
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowMathModal(false)}
+                aria-label="Close mathematical framework dialog"
+                className="text-xs font-semibold text-slate-500 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 p-2 rounded-lg transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
+              >
+                <X className="w-4 h-4" aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-xs">
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <h4 className="font-bold text-slate-900 mb-1">
+                  1. Role Skill-Gap Index (G) Formulation
+                </h4>
+                <p className="font-mono text-indigo-700 font-bold bg-white p-2.5 rounded-lg border border-slate-200 mb-2">
+                  G = 1.0 - ( &Sigma; (w_j &middot; s_j) / &Sigma; w_j )
+                </p>
+                <p className="text-slate-600 leading-relaxed">
+                  Where w_j is the requirement weight and s_j is the candidate match score. Exact keyword matches yield s_j = 1.0; semantic vector matches compute cosine similarity s_j &isin; [0.45, 1.0].
+                </p>
+              </div>
+
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <h4 className="font-bold text-slate-900 mb-1">
+                  2. Priority Ranking &amp; Prerequisite Tie-Breaking
+                </h4>
+                <p className="font-mono text-indigo-700 font-bold bg-white p-2.5 rounded-lg border border-slate-200 mb-2">
+                  p_j = w_j &middot; (1.0 - s_j) + foundation_bonus - readiness_penalty
+                </p>
+                <p className="text-slate-600 leading-relaxed">
+                  Missing skills that serve as prerequisites for other missing competencies receive a foundation bonus (+0.25) so students sequence core fundamentals before advanced frameworks.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Floating Interactive Navigation Dock when analysis is active */}
       {analysis && (

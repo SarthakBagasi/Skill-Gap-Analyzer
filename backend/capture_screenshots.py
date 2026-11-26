@@ -42,8 +42,8 @@ def capture_all():
         driver.get("http://localhost:3000")
         time.sleep(2)
 
-        # Scroll slightly to show Hero + Persona Cards + Role Selector nicely
-        driver.execute_script("window.scrollTo(0, 160);")
+        # Scroll to top to capture Hero + Value Badges + Interactive Mini-Sandbox
+        driver.execute_script("window.scrollTo(0, 0);")
         time.sleep(1)
 
         file1 = os.path.join(SCREENSHOT_DIR, "01_input_role_selection.png")
@@ -57,10 +57,14 @@ def capture_all():
         persona_btn = wait.until(
             EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'Alex Johnson')]"))
         )
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", persona_btn)
+        time.sleep(0.5)
         persona_btn.click()
         time.sleep(1)
 
         submit_btn = driver.find_element(By.XPATH, "//button[@type='submit']")
+        driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", submit_btn)
+        time.sleep(0.5)
         submit_btn.click()
 
         print("  Waiting for deterministic skill gap analysis to complete...")
@@ -71,7 +75,15 @@ def capture_all():
         # Screen 2: Gap Summary cards/charts & What-If Simulator
         # -------------------------------------------------------------
         print("[3/5] Capturing Gap Summary cards and charts...")
-        driver.execute_script("window.scrollTo(0, 680);")
+        driver.execute_script("""
+            const el = document.getElementById("analysis-results");
+            if (el) {
+                el.scrollIntoView({ behavior: 'instant', block: 'start' });
+                window.scrollBy(0, -20);
+            } else {
+                window.scrollTo(0, 680);
+            }
+        """)
         time.sleep(1.5)
 
         file2 = os.path.join(SCREENSHOT_DIR, "02_gap_summary_cards.png")
