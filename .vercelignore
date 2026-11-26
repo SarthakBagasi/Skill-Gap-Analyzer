@@ -1,0 +1,6 @@
+backend/
+docs/
+.agents/
+.github/
+*.db
+*.log

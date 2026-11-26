@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: skill-gap-analyzer-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: DATABASE_URL
+        value: sqlite:///./skill_gap.db
+      - key: ALLOWED_ORIGINS
+        value: "*"
