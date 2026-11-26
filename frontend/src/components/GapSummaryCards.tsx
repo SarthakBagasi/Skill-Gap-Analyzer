@@ -29,11 +29,13 @@ const AnalyticsCharts = dynamic(() => import("./AnalyticsCharts"), {
 interface GapSummaryCardsProps {
   analysis: AnalysisResponse;
   onFilterClick?: (status: string) => void;
+  onCategoryClick?: (category: string) => void;
 }
 
 export default function GapSummaryCards({
   analysis,
   onFilterClick,
+  onCategoryClick,
 }: GapSummaryCardsProps) {
   const {
     gap_index,
@@ -63,6 +65,36 @@ export default function GapSummaryCards({
       }
     });
     setSimulatedSkills(updated);
+  };
+
+  // Deterministic Greedy Goal Optimizer: Find minimum effort skills to reach target alignment
+  const handleOptimizeForGoal = (targetPercent: number) => {
+    const unmet = [...match_breakdown].filter((item) => item.status !== "Strong Match");
+    unmet.sort((a, b) => {
+      const aImpact = a.weight * (1.0 - (a.status === "Partial Match" ? a.similarity_score * 0.7 : 0));
+      const bImpact = b.weight * (1.0 - (b.status === "Partial Match" ? b.similarity_score * 0.7 : 0));
+      return bImpact - aImpact;
+    });
+
+    const totalWeight = match_breakdown.reduce((acc, i) => acc + i.weight, 0);
+    let currentWeightedScore = match_breakdown.reduce((acc, i) => {
+      const score = i.status === "Strong Match" ? 1.0 : i.status === "Partial Match" ? i.similarity_score * 0.7 : 0;
+      return acc + (i.weight * score);
+    }, 0);
+
+    const selected: Record<string, boolean> = {};
+
+    for (const item of unmet) {
+      const currentScorePct = totalWeight > 0 ? (currentWeightedScore / totalWeight) * 100 : 0;
+      if (currentScorePct >= targetPercent) break;
+
+      selected[item.skill_id] = true;
+      const currentItemScore = item.status === "Partial Match" ? item.similarity_score * 0.7 : 0;
+      currentWeightedScore += item.weight * (1.0 - currentItemScore);
+    }
+
+    setSimulatedSkills(selected);
+    if (!simulatorActive) setSimulatorActive(true);
   };
 
   const toggleSimulatedSkill = (skillId: string) => {
@@ -460,20 +492,81 @@ export default function GapSummaryCards({
 
         {/* Skill Simulation Checkbox Matrix */}
         {simulatorActive && (
-          <div className="pt-5 space-y-4">
-            <div className="flex flex-wrap items-center justify-between text-xs text-indigo-200">
-              <span>Select skills to simulate acquisition:</span>
-              <span>
-                Simulated Alignment:{" "}
-                <strong className="text-emerald-400 font-mono text-sm">
-                  {simulationResults.simulatedScore.toFixed(1)}%
-                </strong>{" "}
-                {simulationResults.scoreGain > 0 && (
-                  <span className="text-emerald-300">
-                    (+{simulationResults.scoreGain.toFixed(1)}% increase)
+          <div className="pt-5 space-y-5 animate-fadeIn">
+            {/* Quick Strategy Goal Optimizer Buttons */}
+            <div className="bg-slate-800/90 rounded-xl p-3.5 border border-slate-700/80 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400 shrink-0" aria-hidden="true" />
+                <span className="font-bold text-slate-200">
+                  Target Alignment Optimizer:
+                </span>
+                <span className="text-slate-400">
+                  Auto-select highest-ROI skills for your goal:
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleOptimizeForGoal(80)}
+                  className="px-3 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-400/40 font-semibold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400"
+                >
+                  🎯 Target 80% (Interview Ready)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleOptimizeForGoal(90)}
+                  className="px-3 py-1 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-400/40 font-semibold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-purple-400"
+                >
+                  🚀 Target 90% (Senior Benchmark)
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSelectAllMissing}
+                  className="px-3 py-1 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 font-semibold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-400"
+                >
+                  ⚡ All Missing (100%)
+                </button>
+              </div>
+            </div>
+
+            {/* Side-by-Side Comparative Progress Bar */}
+            <div className="bg-slate-800/60 rounded-xl p-4 border border-slate-700/60 space-y-2">
+              <div className="flex flex-wrap items-center justify-between text-xs text-indigo-200">
+                <div className="flex items-center gap-3">
+                  <span>Current: <strong className="text-slate-300 font-mono tabular-nums">{overall_match_score.toFixed(1)}%</strong></span>
+                  <span aria-hidden="true">&rarr;</span>
+                  <span>
+                    Simulated:{" "}
+                    <strong className="text-emerald-400 font-mono text-sm tabular-nums">
+                      {simulationResults.simulatedScore.toFixed(1)}%
+                    </strong>
                   </span>
+                  {simulationResults.scoreGain > 0 && (
+                    <span className="font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-500/40 tabular-nums">
+                      +{simulationResults.scoreGain.toFixed(1)}% Gain ({simulationResults.newlyAcquiredCount} skills)
+                    </span>
+                  )}
+                </div>
+                <div className="text-[11px] text-slate-400">
+                  Simulated Gap Index: <strong className="font-mono text-white tabular-nums">{simulationResults.simulatedGapIndex.toFixed(3)}</strong>
+                </div>
+              </div>
+
+              {/* Dual Visual Bar */}
+              <div className="w-full bg-slate-950 h-3 rounded-full overflow-hidden relative flex" aria-hidden="true">
+                <div
+                  className="bg-indigo-600 h-full transition-[width] duration-500 ease-out"
+                  style={{ width: `${Math.min(100, overall_match_score)}%` }}
+                  title={`Baseline: ${overall_match_score.toFixed(1)}%`}
+                />
+                {simulationResults.scoreGain > 0 && (
+                  <div
+                    className="bg-emerald-400 h-full transition-[width] duration-500 ease-out"
+                    style={{ width: `${Math.min(100 - overall_match_score, simulationResults.scoreGain)}%` }}
+                    title={`Gain: +${simulationResults.scoreGain.toFixed(1)}%`}
+                  />
                 )}
-              </span>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
@@ -487,7 +580,7 @@ export default function GapSummaryCards({
                     type="button"
                     disabled={isAlreadyStrong}
                     onClick={() => toggleSimulatedSkill(item.skill_id)}
-                    className={`p-2.5 rounded-xl border text-left text-xs transition flex items-center justify-between ${
+                    className={`p-2.5 rounded-xl border text-left text-xs transition-colors flex items-center justify-between cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-400 ${
                       isAlreadyStrong
                         ? "bg-slate-800/40 border-slate-700 text-slate-400 opacity-60 cursor-not-allowed"
                         : isSelected
@@ -503,9 +596,9 @@ export default function GapSummaryCards({
                         Acquired
                       </span>
                     ) : isSelected ? (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" aria-hidden="true" />
                     ) : (
-                      <span className="text-[10px] text-indigo-300 font-mono shrink-0">
+                      <span className="text-[10px] text-indigo-300 font-mono shrink-0 tabular-nums">
                         +{Math.round(item.weight * 100)}%
                       </span>
                     )}
@@ -523,6 +616,7 @@ export default function GapSummaryCards({
         radarData={radarData}
         spectrumData={spectrumData}
         pieData={pieData}
+        onCategoryClick={onCategoryClick}
       />
     </div>
   );

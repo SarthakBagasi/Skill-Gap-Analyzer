@@ -29,6 +29,7 @@ interface AnalyticsChartsProps {
   radarData: Array<{ category: string; fullCategory: string; candidate: number; required: number }>;
   spectrumData: Array<{ name: string; fullName: string; score: number; status: string; matchType: string; weight: number }>;
   pieData: Array<{ name: string; value: number }>;
+  onCategoryClick?: (category: string) => void;
 }
 
 const PIE_COLORS = ["#6366f1", "#8b5cf6", "#10b981", "#f59e0b", "#06b6d4", "#ec4899"];
@@ -38,6 +39,7 @@ export default function AnalyticsCharts({
   radarData,
   spectrumData,
   pieData,
+  onCategoryClick,
 }: AnalyticsChartsProps) {
   const [activeChartTab, setActiveChartTab] = useState<"radar" | "spectrum" | "categories">("radar");
 
@@ -263,20 +265,29 @@ export default function AnalyticsCharts({
           </div>
 
           <div className="w-full md:w-1/2 space-y-2">
-            <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-              Category Weight Composition
-            </h4>
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Category Weight Composition
+              </h4>
+              <span className="text-[10px] text-slate-400">Click to filter matrix</span>
+            </div>
             {pieData.map((cat, idx) => (
-              <div key={idx} className="flex items-center justify-between text-xs py-1 border-b border-slate-100">
+              <button
+                key={idx}
+                type="button"
+                onClick={() => onCategoryClick && onCategoryClick(cat.name)}
+                className="w-full flex items-center justify-between text-xs py-1.5 px-2 rounded-lg hover:bg-indigo-50/60 transition-colors border-b border-slate-100 text-left cursor-pointer group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
+              >
                 <div className="flex items-center gap-2">
                   <span
-                    className="w-3 h-3 rounded-full"
+                    className="w-3 h-3 rounded-full shrink-0 group-hover:scale-110 transition-transform"
                     style={{ backgroundColor: PIE_COLORS[idx % PIE_COLORS.length] }}
+                    aria-hidden="true"
                   />
-                  <span className="font-semibold text-slate-800">{cat.name}</span>
+                  <span className="font-semibold text-slate-800 group-hover:text-indigo-700 transition-colors">{cat.name}</span>
                 </div>
-                <span className="font-mono font-bold text-slate-600">{cat.value}%</span>
-              </div>
+                <span className="font-mono font-bold text-slate-600 tabular-nums">{cat.value}%</span>
+              </button>
             ))}
           </div>
         </div>

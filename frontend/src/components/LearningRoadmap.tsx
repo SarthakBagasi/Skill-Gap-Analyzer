@@ -32,6 +32,8 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
   const [completedTasks, setCompletedTasks] = useState<Record<string, boolean>>({});
   const [copiedPlan, setCopiedPlan] = useState(false);
   const [activePhaseTab, setActivePhaseTab] = useState<"all" | "foundation" | "core" | "advanced">("all");
+  const [difficultyFilter, setDifficultyFilter] = useState<"all" | "Beginner" | "Intermediate" | "Advanced">("all");
+  const [hoursPerWeek, setHoursPerWeek] = useState<number>(10);
 
   // Load completed tasks on mount
   useEffect(() => {
@@ -97,13 +99,30 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
     ? Math.round((completedCount / totalTasksCount) * 100)
     : 0;
 
-  // Filter roadmap based on phase tab
+  // Interactive graduation timeline based on pacing
+  const estimatedWeeks = useMemo(() => {
+    return hoursPerWeek > 0 ? (totalEstimatedHours / hoursPerWeek).toFixed(1) : "0";
+  }, [totalEstimatedHours, hoursPerWeek]);
+
+  const targetCompletionDate = useMemo(() => {
+    const weeks = parseFloat(estimatedWeeks);
+    const date = new Date();
+    date.setDate(date.getDate() + Math.ceil(weeks * 7));
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }, [estimatedWeeks]);
+
+  // Filter roadmap based on phase tab & difficulty filter
   const displayedItems = useMemo(() => {
-    if (activePhaseTab === "foundation") return phasedRoadmap.phase1;
-    if (activePhaseTab === "core") return phasedRoadmap.phase2;
-    if (activePhaseTab === "advanced") return phasedRoadmap.phase3;
-    return roadmap;
-  }, [roadmap, phasedRoadmap, activePhaseTab]);
+    let base = roadmap;
+    if (activePhaseTab === "foundation") base = phasedRoadmap.phase1;
+    else if (activePhaseTab === "core") base = phasedRoadmap.phase2;
+    else if (activePhaseTab === "advanced") base = phasedRoadmap.phase3;
+
+    if (difficultyFilter !== "all") {
+      base = base.filter((i) => i.difficulty === difficultyFilter);
+    }
+    return base;
+  }, [roadmap, phasedRoadmap, activePhaseTab, difficultyFilter]);
 
   const handleCopyStudyPlan = () => {
     let md = `# Personalized Career Upskilling Roadmap\n\n`;
@@ -192,100 +211,169 @@ export default function LearningRoadmap({ roadmap }: LearningRoadmapProps) {
           </div>
         </div>
 
-        {/* Interactive Progress Meter */}
-        <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-sm shrink-0 font-mono tabular-nums shadow-xs">
-              {progressPercentage}%
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-800">
-                  Interactive Exercise Progress:
-                </span>
-                <span className="text-xs font-mono font-bold text-indigo-600 tabular-nums">
-                  {completedCount} of {totalTasksCount} completed
-                </span>
+        {/* Interactive Progress Meter & Study Pacing Calculator */}
+        <div className="bg-slate-50 rounded-xl p-5 border border-slate-200 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-extrabold text-sm shrink-0 font-mono tabular-nums shadow-xs">
+                {progressPercentage}%
               </div>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Check off tasks as you practice. Progress is automatically saved in your browser.
-              </p>
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-slate-800">
+                    Interactive Exercise Progress:
+                  </span>
+                  <span className="text-xs font-mono font-bold text-indigo-600 tabular-nums">
+                    {completedCount} of {totalTasksCount} tasks completed
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Check off tasks as you practice. Progress is automatically saved in your browser.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3 text-xs font-semibold text-slate-600">
+              <span className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-xl shadow-xs">
+                <Clock className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
+                <span>Total Effort: <strong className="font-mono tabular-nums text-slate-900">~{totalEstimatedHours}h</strong></span>
+              </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-semibold text-slate-600">
-            <span className="flex items-center gap-1.5 bg-white border border-slate-200 px-3 py-1.5 rounded-xl shadow-xs">
-              <Clock className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
-              <span>Total Effort: <strong className="font-mono tabular-nums text-slate-900">~{totalEstimatedHours}h</strong></span>
-            </span>
+          {/* Interactive Study Pacing Widget */}
+          <div className="pt-3 border-t border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs">
+            <div className="flex items-center gap-3">
+              <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
+                Study Pacing:
+              </span>
+              <div className="flex items-center gap-1.5" role="group" aria-label="Study pacing selector">
+                {[
+                  { hours: 5, label: "5h/wk (Casual)" },
+                  { hours: 10, label: "10h/wk (Recommended)" },
+                  { hours: 20, label: "20h/wk (Intensive)" },
+                ].map((tier) => (
+                  <button
+                    key={tier.hours}
+                    type="button"
+                    onClick={() => setHoursPerWeek(tier.hours)}
+                    className={`px-2.5 py-1 rounded-lg font-semibold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+                      hoursPerWeek === tier.hours
+                        ? "bg-indigo-600 text-white shadow-2xs"
+                        : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-100"
+                    }`}
+                  >
+                    {tier.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white border border-slate-200 px-3 py-1.5 rounded-xl shadow-2xs text-[11px] font-medium text-slate-700 flex items-center gap-2">
+              <span>Estimated Duration: <strong className="font-mono font-bold text-indigo-700 tabular-nums">~{estimatedWeeks} weeks</strong></span>
+              <span aria-hidden="true">&bull;</span>
+              <span>Target Readiness: <strong className="font-mono font-bold text-emerald-700">{targetCompletionDate}</strong></span>
+            </div>
           </div>
+
+          {/* Milestone Celebration Banner */}
+          {progressPercentage >= 100 ? (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 flex items-center gap-2 text-xs text-emerald-900 font-bold animate-fadeIn">
+              <Trophy className="w-4 h-4 text-emerald-600 shrink-0" aria-hidden="true" />
+              <span>100% Curriculum Completed! Candidate profile demonstrates full readiness for technical interviews.</span>
+            </div>
+          ) : progressPercentage >= 50 ? (
+            <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-3 flex items-center gap-2 text-xs text-indigo-900 font-semibold animate-fadeIn">
+              <Flame className="w-4 h-4 text-indigo-600 shrink-0" aria-hidden="true" />
+              <span>Great momentum! Halfway through practical exercises. Continue checking off portfolio deliverables.</span>
+            </div>
+          ) : null}
         </div>
 
-        {/* Phase Filter Tabs */}
-        <div
-          role="tablist"
-          aria-label="Filter roadmap learning stages"
-          className="flex flex-wrap items-center gap-2 pt-1"
-        >
-          <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1" id="phase-tabs-label">
-            Learning Stages:
-          </span>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activePhaseTab === "all"}
-            aria-controls="roadmap-items-container"
-            onClick={() => setActivePhaseTab("all")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 focus:outline-hidden ${
-              activePhaseTab === "all"
-                ? "bg-slate-900 text-white shadow-xs"
-                : "bg-slate-100 hover:bg-slate-200 text-slate-600"
-            }`}
+        {/* Phase Filter Tabs & Difficulty Filter */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+          <div
+            role="tablist"
+            aria-label="Filter roadmap learning stages"
+            className="flex flex-wrap items-center gap-2"
           >
-            All Gaps (<span className="tabular-nums font-mono">{roadmap.length}</span>)
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activePhaseTab === "foundation"}
-            aria-controls="roadmap-items-container"
-            onClick={() => setActivePhaseTab("foundation")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2 focus:outline-hidden ${
-              activePhaseTab === "foundation"
-                ? "bg-rose-600 text-white shadow-xs"
-                : "bg-rose-50 hover:bg-rose-100 text-rose-700"
-            }`}
-          >
-            Phase 1: Foundations (<span className="tabular-nums font-mono">{phasedRoadmap.phase1.length}</span>)
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activePhaseTab === "core"}
-            aria-controls="roadmap-items-container"
-            onClick={() => setActivePhaseTab("core")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2 focus:outline-hidden ${
-              activePhaseTab === "core"
-                ? "bg-amber-600 text-white shadow-xs"
-                : "bg-amber-50 hover:bg-amber-100 text-amber-700"
-            }`}
-          >
-            Phase 2: Core Frameworks (<span className="tabular-nums font-mono">{phasedRoadmap.phase2.length}</span>)
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={activePhaseTab === "advanced"}
-            aria-controls="roadmap-items-container"
-            onClick={() => setActivePhaseTab("advanced")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:ring-2 focus-visible:ring-purple-600 focus-visible:ring-offset-2 focus:outline-hidden ${
-              activePhaseTab === "advanced"
-                ? "bg-purple-600 text-white shadow-xs"
-                : "bg-purple-50 hover:bg-purple-100 text-purple-700"
-            }`}
-          >
-            Phase 3: Systems Specialization (<span className="tabular-nums font-mono">{phasedRoadmap.phase3.length}</span>)
-          </button>
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider mr-1" id="phase-tabs-label">
+              Learning Stages:
+            </span>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activePhaseTab === "all"}
+              aria-controls="roadmap-items-container"
+              onClick={() => setActivePhaseTab("all")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+                activePhaseTab === "all"
+                  ? "bg-slate-900 text-white shadow-xs"
+                  : "bg-slate-100 hover:bg-slate-200 text-slate-600"
+              }`}
+            >
+              All Gaps (<span className="tabular-nums font-mono">{roadmap.length}</span>)
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activePhaseTab === "foundation"}
+              aria-controls="roadmap-items-container"
+              onClick={() => setActivePhaseTab("foundation")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-rose-600 ${
+                activePhaseTab === "foundation"
+                  ? "bg-rose-600 text-white shadow-xs"
+                  : "bg-rose-50 hover:bg-rose-100 text-rose-700"
+              }`}
+            >
+              Phase 1: Foundations (<span className="tabular-nums font-mono">{phasedRoadmap.phase1.length}</span>)
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activePhaseTab === "core"}
+              aria-controls="roadmap-items-container"
+              onClick={() => setActivePhaseTab("core")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-600 ${
+                activePhaseTab === "core"
+                  ? "bg-amber-600 text-white shadow-xs"
+                  : "bg-amber-50 hover:bg-amber-100 text-amber-700"
+              }`}
+            >
+              Phase 2: Core (<span className="tabular-nums font-mono">{phasedRoadmap.phase2.length}</span>)
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={activePhaseTab === "advanced"}
+              aria-controls="roadmap-items-container"
+              onClick={() => setActivePhaseTab("advanced")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-purple-600 ${
+                activePhaseTab === "advanced"
+                  ? "bg-purple-600 text-white shadow-xs"
+                  : "bg-purple-50 hover:bg-purple-100 text-purple-700"
+              }`}
+            >
+              Phase 3: Systems (<span className="tabular-nums font-mono">{phasedRoadmap.phase3.length}</span>)
+            </button>
+          </div>
+
+          {/* Difficulty Dropdown / Filter */}
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-slate-400 text-[11px] font-semibold">Difficulty:</span>
+            <select
+              aria-label="Filter roadmap by difficulty tier"
+              value={difficultyFilter}
+              onChange={(e) => setDifficultyFilter(e.target.value as any)}
+              className="bg-white border border-slate-200 rounded-xl px-2.5 py-1 text-xs font-medium text-slate-700 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-2xs"
+            >
+              <option value="all">All Levels</option>
+              <option value="Beginner">Beginner Only</option>
+              <option value="Intermediate">Intermediate Only</option>
+              <option value="Advanced">Advanced Only</option>
+            </select>
+          </div>
         </div>
       </div>
 

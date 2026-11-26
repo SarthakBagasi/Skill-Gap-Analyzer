@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import InputPanel from "@/components/InputPanel";
 import GapSummaryCards from "@/components/GapSummaryCards";
 import EvidenceTable from "@/components/EvidenceTable";
 import LearningRoadmap from "@/components/LearningRoadmap";
+import CommandPalette, { CommandItem } from "@/components/CommandPalette";
 import { RoleProfile, AnalysisResponse } from "@/types/analysis";
 import {
   Sparkles,
@@ -16,6 +17,13 @@ import {
   FileText,
   Cpu,
   Layers,
+  Keyboard,
+  Compass,
+  Sliders,
+  TrendingUp,
+  FileCheck2,
+  ArrowUp,
+  User,
 } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -74,6 +82,8 @@ export default function HomePage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showMathModal, setShowMathModal] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [tableSearchQuery, setTableSearchQuery] = useState("");
 
   useEffect(() => {
     fetch(`${API_BASE}/api/roles`)
@@ -91,16 +101,20 @@ export default function HomePage() {
       });
   }, []);
 
-  // Keyboard accessibility for modal
+  // Keyboard accessibility for modal and global Command Palette (Ctrl+K / Cmd+K)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && showMathModal) {
-        setShowMathModal(false);
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      } else if (e.key === "Escape") {
+        if (showMathModal) setShowMathModal(false);
+        if (isCommandPaletteOpen) setIsCommandPaletteOpen(false);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [showMathModal]);
+  }, [showMathModal, isCommandPaletteOpen]);
 
   const triggerToast = (msg: string) => {
     setToastMessage(msg);
@@ -149,6 +163,114 @@ export default function HomePage() {
     tableEl?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Interactive cross-component filtering when student clicks on an extracted skill chip
+  const handleExtractedSkillClick = (skillName: string) => {
+    setTableSearchQuery(skillName);
+    triggerToast(`Filtered Evidence Matrix for competency: ${skillName}`);
+    setTimeout(() => {
+      document.getElementById("evidence-matrix")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
+  const handleCategoryClick = (category: string) => {
+    setTableSearchQuery(category);
+    triggerToast(`Filtered Evidence Matrix for category: ${category}`);
+    setTimeout(() => {
+      document.getElementById("evidence-matrix")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
+
+  // Command Palette Items
+  const commands: CommandItem[] = useMemo(() => [
+    {
+      id: "persona-alex",
+      title: "Alex Johnson (Backend Developer)",
+      category: "Personas",
+      description: "FastAPI, PostgreSQL, Redis, Docker, Pytest",
+      icon: User,
+      action: () => {
+        setSelectedRoleId("backend_developer");
+        triggerToast("Selected persona: Alex Johnson");
+        document.getElementById("candidate-name-input")?.scrollIntoView({ behavior: "smooth" });
+      },
+      shortcut: "1",
+    },
+    {
+      id: "persona-priya",
+      title: "Priya Sharma (Data Scientist)",
+      category: "Personas",
+      description: "Pandas, NumPy, Scikit-Learn, Statistics, SQL",
+      icon: User,
+      action: () => {
+        setSelectedRoleId("data_scientist");
+        triggerToast("Selected persona: Priya Sharma");
+        document.getElementById("candidate-name-input")?.scrollIntoView({ behavior: "smooth" });
+      },
+      shortcut: "2",
+    },
+    {
+      id: "persona-marcus",
+      title: "Marcus Vance (Machine Learning Engineer)",
+      category: "Personas",
+      description: "PyTorch, Deep Learning, MLOps, Docker, FastAPI",
+      icon: User,
+      action: () => {
+        setSelectedRoleId("ml_engineer");
+        triggerToast("Selected persona: Marcus Vance");
+        document.getElementById("candidate-name-input")?.scrollIntoView({ behavior: "smooth" });
+      },
+      shortcut: "3",
+    },
+    {
+      id: "jump-summary",
+      title: "Jump to Skill-Gap Summary Cards",
+      category: "Navigation",
+      description: "View Gap Index (G), overall match score, and gauge",
+      icon: TrendingUp,
+      action: () => {
+        document.getElementById("analysis-results")?.scrollIntoView({ behavior: "smooth" });
+      },
+    },
+    {
+      id: "jump-matrix",
+      title: "Jump to Explainability Matrix",
+      category: "Navigation",
+      description: "View requirement breakdown, cosine similarity & rationales",
+      icon: FileCheck2,
+      action: () => {
+        document.getElementById("evidence-matrix")?.scrollIntoView({ behavior: "smooth" });
+      },
+    },
+    {
+      id: "jump-roadmap",
+      title: "Jump to Prioritized Learning Roadmap",
+      category: "Navigation",
+      description: "Inspect sequenced curriculum, tasks, and documentation",
+      icon: Compass,
+      action: () => {
+        document.getElementById("roadmap-items-container")?.scrollIntoView({ behavior: "smooth" });
+      },
+    },
+    {
+      id: "math-modal",
+      title: "Inspect Mathematical Formulas",
+      category: "Export & Actions",
+      description: "View deterministic Gap Index (G) and ranking equations",
+      icon: Calculator,
+      action: () => setShowMathModal(true),
+      shortcut: "M",
+    },
+    {
+      id: "print-pdf",
+      title: "Print / Save Assessment as PDF",
+      category: "Export & Actions",
+      description: "Export clean executive decision-support audit document",
+      icon: Printer,
+      action: () => window.print(),
+      shortcut: "⌘P",
+    },
+  ], []);
+
   return (
     <div className="space-y-12">
       {/* Accessible Live Toast Notification */}
@@ -178,10 +300,21 @@ export default function HomePage() {
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <button
             type="button"
+            onClick={() => setIsCommandPaletteOpen(true)}
+            aria-label="Open keyboard command palette"
+            className="text-xs font-semibold px-4 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-2"
+          >
+            <Keyboard className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
+            <span>Command Palette</span>
+            <kbd className="px-1.5 py-0.5 bg-white border border-indigo-200 rounded font-mono text-[10px] font-bold text-indigo-700">⌘K</kbd>
+          </button>
+
+          <button
+            type="button"
             onClick={() => setShowMathModal(true)}
             aria-haspopup="dialog"
             aria-expanded={showMathModal}
-            className="text-xs font-semibold px-4 py-2 rounded-lg bg-white hover:bg-slate-50 text-indigo-700 border border-slate-200 shadow-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 flex items-center gap-2"
+            className="text-xs font-semibold px-4 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-2"
           >
             <Calculator className="w-4 h-4 text-indigo-600" aria-hidden="true" />
             Inspect Mathematical Formulations
@@ -233,9 +366,17 @@ export default function HomePage() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
+                onClick={() => setIsCommandPaletteOpen(true)}
+                className="hidden sm:inline-flex text-xs font-semibold px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors items-center gap-1.5 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
+              >
+                <Keyboard className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
+                Quick Actions
+              </button>
+              <button
+                type="button"
                 onClick={() => window.print()}
                 aria-label="Print or save assessment summary as PDF"
-                className="text-xs font-semibold px-4 py-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 flex items-center gap-1.5"
+                className="text-xs font-semibold px-4 py-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-1.5"
               >
                 <Printer className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
                 Print / Save PDF
@@ -243,7 +384,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Extracted Skills Summary Chip Cloud */}
+          {/* Extracted Skills Summary Chip Cloud (Interactive filter tags) */}
           <div className="craft-card rounded-2xl p-6 sm:p-7 space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-100">
               <div>
@@ -252,25 +393,28 @@ export default function HomePage() {
                   Extracted Candidate Competencies ({analysis.extracted_skills.length} Detected)
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Extracted via spaCy PhraseMatcher & noun-chunk fallback from submitted resume text
+                  Click any skill chip below to highlight and filter its corresponding audit evaluation in the matrix
                 </p>
               </div>
               <span className="text-[11px] font-mono text-slate-600 bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200 self-start sm:self-auto font-semibold">
-                Document Format: {analysis.source_type.toUpperCase()}
+                Format: {analysis.source_type.toUpperCase()}
               </span>
             </div>
 
             <div className="flex flex-wrap gap-2 pt-1" aria-label="Extracted skills list">
               {analysis.extracted_skills.map((skill, sIdx) => (
-                <div
+                <button
                   key={sIdx}
-                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-indigo-50/50 border border-slate-200 text-xs text-slate-800 transition"
+                  type="button"
+                  onClick={() => handleExtractedSkillClick(skill.name)}
+                  aria-label={`Highlight and filter ${skill.name} in Evidence Matrix`}
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-indigo-50 border border-slate-200 text-xs text-slate-800 transition-colors cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-2xs group"
                 >
-                  <span className="font-semibold text-slate-900">{skill.name}</span>
+                  <span className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">{skill.name}</span>
                   <span className="text-[10px] text-slate-500 font-mono bg-white px-1.5 py-0.5 rounded border border-slate-200">
                     {skill.category}
                   </span>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -279,11 +423,15 @@ export default function HomePage() {
           <GapSummaryCards
             analysis={analysis}
             onFilterClick={handleFilterClick}
+            onCategoryClick={handleCategoryClick}
           />
 
           {/* 2. Requirement-Level Explainability Matrix */}
           <div id="evidence-matrix">
-            <EvidenceTable items={analysis.match_breakdown} />
+            <EvidenceTable
+              items={analysis.match_breakdown}
+              searchQueryProp={tableSearchQuery}
+            />
           </div>
 
           {/* 3. Prioritized Traceable Learning Roadmap */}
@@ -453,6 +601,63 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Floating Interactive Navigation Dock when analysis is active */}
+      {analysis && (
+        <aside
+          aria-label="Quick assessment navigation dock"
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-white/95 backdrop-blur-xs border border-slate-300 rounded-2xl px-4 py-2.5 shadow-xl flex items-center gap-3 text-xs text-slate-700 animate-fadeIn no-print"
+        >
+          <div className="flex items-center gap-2 pr-3 border-r border-slate-200">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
+            <span className="font-bold text-slate-900 font-mono tabular-nums">{analysis.overall_match_score.toFixed(1)}% Match</span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            <a
+              href="#analysis-results"
+              className="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 font-semibold transition-colors"
+            >
+              Summary
+            </a>
+            <a
+              href="#evidence-matrix"
+              className="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 font-semibold transition-colors"
+            >
+              Matrix
+            </a>
+            <a
+              href="#roadmap-items-container"
+              className="px-2.5 py-1 rounded-lg hover:bg-slate-100 text-slate-600 font-semibold transition-colors"
+            >
+              Roadmap
+            </a>
+            <button
+              type="button"
+              onClick={() => setIsCommandPaletteOpen(true)}
+              aria-label="Open command palette"
+              className="px-2 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold transition-colors ml-1"
+            >
+              ⌘K
+            </button>
+            <button
+              type="button"
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              aria-label="Scroll to top of workspace"
+              className="p-1 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-800 transition-colors ml-1"
+            >
+              <ArrowUp className="w-3.5 h-3.5" aria-hidden="true" />
+            </button>
+          </div>
+        </aside>
+      )}
+
+      {/* Global Interactive Command Palette */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        commands={commands}
+      />
     </div>
   );
 }

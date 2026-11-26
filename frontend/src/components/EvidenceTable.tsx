@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   FileCheck2,
   Search,
@@ -18,21 +18,43 @@ import {
   ArrowUpDown,
   Check,
   Cpu,
+  X,
 } from "lucide-react";
 import { MatchBreakdownItem, MatchStatus } from "@/types/analysis";
 
 interface EvidenceTableProps {
   items: MatchBreakdownItem[];
+  searchQueryProp?: string;
 }
 
-export default function EvidenceTable({ items }: EvidenceTableProps) {
+export default function EvidenceTable({ items, searchQueryProp }: EvidenceTableProps) {
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchQueryProp || "");
   const [sortBy, setSortBy] = useState<"weight" | "similarity" | "name">("weight");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [copiedNotification, setCopiedNotification] = useState(false);
+
+  // Sync external search query (e.g. when candidate clicks a chip from extracted skills cloud)
+  useEffect(() => {
+    if (searchQueryProp !== undefined) {
+      setSearchQuery(searchQueryProp);
+    }
+  }, [searchQueryProp]);
+
+  const handleToggleExpandAll = () => {
+    const isAllExpanded = filteredAndSortedItems.length > 0 && 
+      filteredAndSortedItems.every((i) => expandedRows[i.skill_id]);
+    
+    if (isAllExpanded) {
+      setExpandedRows({});
+    } else {
+      const all: Record<string, boolean> = {};
+      filteredAndSortedItems.forEach((i) => (all[i.skill_id] = true));
+      setExpandedRows(all);
+    }
+  };
 
   // Extract unique categories for category filter
   const categories = useMemo(() => {
@@ -187,9 +209,23 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
           <div className="flex items-center gap-2">
             <button
               type="button"
+              onClick={handleToggleExpandAll}
+              aria-label="Toggle all deep dive explanations"
+              className="text-xs font-semibold px-3 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
+              <span>
+                {filteredAndSortedItems.length > 0 && filteredAndSortedItems.every((i) => expandedRows[i.skill_id])
+                  ? "Collapse All"
+                  : "Expand All"}
+              </span>
+            </button>
+
+            <button
+              type="button"
               onClick={handleCopyMarkdown}
               aria-label="Copy evidence matrix as Markdown table"
-              className="text-xs font-semibold px-3.5 py-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-1.5"
+              className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-1.5"
             >
               {copiedNotification ? (
                 <>
@@ -208,7 +244,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
               type="button"
               onClick={handleDownloadCSV}
               aria-label="Download evidence matrix as CSV spreadsheet"
-              className="text-xs font-semibold px-3.5 py-2 rounded-lg bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-1.5"
+              className="text-xs font-semibold px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 flex items-center gap-1.5"
             >
               <Download className="w-3.5 h-3.5 text-slate-500" aria-hidden="true" />
               <span>Export CSV</span>
@@ -345,8 +381,18 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                 placeholder="Filter by keyword…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 pr-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-2xs w-44 sm:w-52"
+                className="pl-8 pr-7 py-2 text-xs bg-white border border-slate-200 rounded-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-2xs w-44 sm:w-52"
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  aria-label="Clear keyword filter"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 text-slate-400 hover:text-slate-600 rounded"
+                >
+                  <X className="w-3.5 h-3.5" aria-hidden="true" />
+                </button>
+              )}
             </div>
           </div>
         </div>
