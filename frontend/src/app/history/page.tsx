@@ -22,7 +22,8 @@ import GapSummaryCards from "@/components/GapSummaryCards";
 import EvidenceTable from "@/components/EvidenceTable";
 import LearningRoadmap from "@/components/LearningRoadmap";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const rawApiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = rawApiBase.replace(/\/+$/, "").replace(/\/api$/, "");
 
 export default function HistoryPage() {
   const { user, token, logout } = useAuth();
