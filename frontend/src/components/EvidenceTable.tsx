@@ -273,22 +273,28 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
           {/* Right: Category Selector & Search */}
           <div className="flex flex-wrap items-center gap-2">
             {/* Category filter dropdown */}
-            <select
-              aria-label="Filter by skill category"
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="text-xs bg-white border border-slate-200 rounded-lg px-3 py-2 font-medium text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-xs"
-            >
-              <option value="all">All Categories ({categories.length})</option>
-              {categories.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label htmlFor="evidence-category-select" className="sr-only">
+                Filter by skill category
+              </label>
+              <select
+                id="evidence-category-select"
+                aria-label="Filter by skill category"
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
+                className="text-xs bg-white border border-slate-200 rounded-xl px-3 py-2 font-medium text-slate-700 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-2xs"
+              >
+                <option value="all">All Categories ({categories.length})</option>
+                {categories.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             {/* Sorter */}
-            <div className="flex items-center bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 shadow-xs">
+            <div className="flex items-center bg-white border border-slate-200 rounded-xl px-2 py-1.5 text-xs text-slate-700 shadow-2xs">
               <span className="text-slate-400 mr-1 text-[11px]">Sort:</span>
               <button
                 type="button"
@@ -301,7 +307,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                     setSortOrder("desc");
                   }
                 }}
-                className={`px-2 py-0.5 rounded font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+                className={`px-2 py-0.5 rounded-lg font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                   sortBy === "weight" ? "text-indigo-600 font-bold bg-indigo-50" : "text-slate-600"
                 }`}
               >
@@ -318,7 +324,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                     setSortOrder("desc");
                   }
                 }}
-                className={`px-2 py-0.5 rounded font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+                className={`px-2 py-0.5 rounded-lg font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                   sortBy === "similarity" ? "text-indigo-600 font-bold bg-indigo-50" : "text-slate-600"
                 }`}
               >
@@ -328,25 +334,29 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
 
             {/* Search Box */}
             <div className="relative">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
+              <label htmlFor="evidence-search-input" className="sr-only">
+                Filter competencies by keyword
+              </label>
+              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true" />
               <input
-                type="text"
+                id="evidence-search-input"
+                type="search"
                 aria-label="Filter competencies by search query"
                 placeholder="Filter by keyword…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-8 pr-3 py-2 text-xs bg-white border border-slate-200 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-xs w-44 sm:w-52"
+                className="pl-8 pr-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 shadow-2xs w-44 sm:w-52"
               />
             </div>
           </div>
         </div>
       </div>
 
-      {/* Interactive Table */}
-      <div className="overflow-x-auto">
+      {/* Interactive Table with Sticky Header */}
+      <div className="overflow-x-auto max-h-[600px] overflow-y-auto">
         <table className="w-full text-left text-xs border-collapse" aria-label="Requirement-Level Explainability Matrix">
-          <thead>
-            <tr className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider text-[11px]">
+          <thead className="sticky top-0 bg-slate-50 z-10 border-b border-slate-200 shadow-2xs">
+            <tr className="text-slate-600 font-bold uppercase tracking-wider text-[11px]">
               <th scope="col" className="py-3.5 px-5">Target Requirement</th>
               <th scope="col" className="py-3.5 px-3">Role Weight</th>
               <th scope="col" className="py-3.5 px-3">Match Status</th>
@@ -378,7 +388,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                       {/* Skill Name & Category */}
                       <td className="py-4 px-5">
                         <div className="flex items-center gap-2">
-                          <p className="font-bold text-slate-900 text-sm group-hover:text-indigo-600 transition">
+                          <p className="font-bold text-slate-900 text-sm group-hover:text-indigo-600 transition-colors">
                             {item.skill_name}
                           </p>
                         </div>
@@ -456,7 +466,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                           aria-expanded={isExpanded}
                           aria-controls={`detail-${item.skill_id}`}
                           aria-label={`${isExpanded ? "Collapse" : "Expand"} deep dive explanation for ${item.skill_name}`}
-                          className="p-1 rounded-lg text-slate-400 group-hover:text-indigo-600 group-hover:bg-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+                          className="p-1 rounded-lg text-slate-400 group-hover:text-indigo-600 group-hover:bg-white transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
                         >
                           {isExpanded ? (
                             <ChevronUp className="w-4 h-4 text-indigo-600" aria-hidden="true" />
@@ -471,10 +481,10 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                     {isExpanded && (
                       <tr id={`detail-${item.skill_id}`} className="bg-slate-50/90 border-y border-indigo-100">
                         <td colSpan={7} className="p-5">
-                          <div className="glass-panel rounded-2xl p-4 sm:p-5 border-indigo-200/80 shadow-xs space-y-3">
+                          <div className="craft-card rounded-xl p-4 sm:p-5 border-indigo-200 shadow-2xs space-y-3 bg-white">
                             <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-100">
                               <span className="font-bold text-slate-800 uppercase tracking-wider text-[11px] flex items-center gap-1.5">
-                                <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
+                                <Sparkles className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
                                 Explainability Deep Dive: {item.skill_name}
                               </span>
                               <span className="font-mono text-slate-500 text-[11px]">
@@ -487,7 +497,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
                                   Deterministic Evaluation Rationale
                                 </span>
-                                <p className="text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-slate-200">
+                                <p className="text-slate-700 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-200">
                                   {item.explanation}
                                 </p>
                               </div>
@@ -496,7 +506,7 @@ export default function EvidenceTable({ items }: EvidenceTableProps) {
                                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider block mb-1">
                                   Candidate Evidence Snippet
                                 </span>
-                                <div className="bg-white p-3 rounded-xl border border-slate-200 font-mono text-[11px] text-slate-700 leading-relaxed">
+                                <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 font-mono text-[11px] text-slate-700 leading-relaxed">
                                   {item.evidence_snippet ? (
                                     <span>&ldquo;{item.evidence_snippet}&rdquo;</span>
                                   ) : (

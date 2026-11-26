@@ -19,9 +19,9 @@ import { AnalysisResponse, MatchBreakdownItem } from "@/types/analysis";
 const AnalyticsCharts = dynamic(() => import("./AnalyticsCharts"), {
   ssr: false,
   loading: () => (
-    <div className="glass-panel rounded-3xl p-8 border border-slate-200 h-80 flex flex-col items-center justify-center space-y-2">
-      <div className="w-8 h-8 rounded-full border-2 border-indigo-600 border-t-transparent animate-spin" />
-      <p className="text-xs text-slate-500 font-medium">Initializing interactive visualizations...</p>
+    <div className="craft-card rounded-2xl p-8 border border-slate-200 h-80 flex flex-col items-center justify-center space-y-2">
+      <div className="w-8 h-8 rounded-full border-2 border-indigo-600 border-t-transparent animate-spin" aria-hidden="true" />
+      <p className="text-xs text-slate-500 font-medium">Initializing interactive visualizations…</p>
     </div>
   ),
 });
@@ -53,6 +53,16 @@ export default function GapSummaryCards({
 
   const handleResetSimulator = () => {
     setSimulatedSkills({});
+  };
+
+  const handleSelectAllMissing = () => {
+    const updated: Record<string, boolean> = {};
+    match_breakdown.forEach((item) => {
+      if (item.status !== "Strong Match") {
+        updated[item.skill_id] = true;
+      }
+    });
+    setSimulatedSkills(updated);
   };
 
   const toggleSimulatedSkill = (skillId: string) => {
@@ -265,8 +275,8 @@ export default function GapSummaryCards({
         <button
           type="button"
           onClick={() => onFilterClick && onFilterClick("Strong Match")}
-          aria-label={`View ${strong_matches_count} strong matching requirements`}
-          className="craft-card text-left rounded-xl p-5 shadow-xs border-slate-200 hover:border-emerald-300 hover:shadow-sm transition flex flex-col justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+          aria-label={`Filter evidence table by ${strong_matches_count} strong matching requirements`}
+          className="craft-card text-left rounded-xl p-5 shadow-2xs border-slate-200 hover:border-emerald-300 transition-colors flex flex-col justify-between group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-emerald-600 focus-visible:ring-offset-2"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-emerald-800 uppercase tracking-wider">
@@ -286,16 +296,20 @@ export default function GapSummaryCards({
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Exact tokens & high-cosine semantic equivalents.
+              Exact tokens &amp; high-cosine semantic equivalents.
             </p>
           </div>
           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2" aria-hidden="true">
             <div
-              className="bg-emerald-500 h-full rounded-full transition-all duration-700"
+              className="bg-emerald-500 h-full rounded-full transition-[width] duration-700 ease-out"
               style={{
                 width: `${total_requirements_count > 0 ? (strong_matches_count / total_requirements_count) * 100 : 0}%`,
               }}
             />
+          </div>
+          <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-emerald-700 font-semibold">
+            <span>Filter in Matrix</span>
+            <span aria-hidden="true">&darr;</span>
           </div>
         </button>
 
@@ -303,8 +317,8 @@ export default function GapSummaryCards({
         <button
           type="button"
           onClick={() => onFilterClick && onFilterClick("Partial Match")}
-          aria-label={`View ${partial_matches_count} partial matching requirements`}
-          className="craft-card text-left rounded-xl p-5 shadow-xs border-slate-200 hover:border-amber-300 hover:shadow-sm transition flex flex-col justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
+          aria-label={`Filter evidence table by ${partial_matches_count} partial matching requirements`}
+          className="craft-card text-left rounded-xl p-5 shadow-2xs border-slate-200 hover:border-amber-300 transition-colors flex flex-col justify-between group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber-600 focus-visible:ring-offset-2"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">
@@ -324,16 +338,20 @@ export default function GapSummaryCards({
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Related skill present, but canonical depth needed.
+              Related skill present; canonical depth recommended.
             </p>
           </div>
           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2" aria-hidden="true">
             <div
-              className="bg-amber-500 h-full rounded-full transition-all duration-700"
+              className="bg-amber-500 h-full rounded-full transition-[width] duration-700 ease-out"
               style={{
                 width: `${total_requirements_count > 0 ? (partial_matches_count / total_requirements_count) * 100 : 0}%`,
               }}
             />
+          </div>
+          <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-amber-700 font-semibold">
+            <span>Filter in Matrix</span>
+            <span aria-hidden="true">&darr;</span>
           </div>
         </button>
 
@@ -341,8 +359,8 @@ export default function GapSummaryCards({
         <button
           type="button"
           onClick={() => onFilterClick && onFilterClick("Missing Skill")}
-          aria-label={`View ${missing_skills_count} missing requirements`}
-          className="craft-card text-left rounded-xl p-5 shadow-xs border-slate-200 hover:border-rose-300 hover:shadow-sm transition flex flex-col justify-between group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600"
+          aria-label={`Filter evidence table by ${missing_skills_count} missing requirements`}
+          className="craft-card text-left rounded-xl p-5 shadow-2xs border-slate-200 hover:border-rose-300 transition-colors flex flex-col justify-between group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-rose-600 focus-visible:ring-offset-2"
         >
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-rose-800 uppercase tracking-wider">
@@ -362,16 +380,20 @@ export default function GapSummaryCards({
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Unaddressed core competencies to target first.
+              Unaddressed core competencies to prioritize first.
             </p>
           </div>
           <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden mt-2" aria-hidden="true">
             <div
-              className="bg-rose-500 h-full rounded-full transition-all duration-700"
+              className="bg-rose-500 h-full rounded-full transition-[width] duration-700 ease-out"
               style={{
                 width: `${total_requirements_count > 0 ? (missing_skills_count / total_requirements_count) * 100 : 0}%`,
               }}
             />
+          </div>
+          <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-rose-700 font-semibold">
+            <span>Filter in Matrix</span>
+            <span aria-hidden="true">&darr;</span>
           </div>
         </button>
       </div>
@@ -397,20 +419,35 @@ export default function GapSummaryCards({
           </div>
 
           <div className="flex items-center gap-2">
-            {simulatorActive && simulationResults.newlyAcquiredCount > 0 && (
-              <button
-                type="button"
-                onClick={handleResetSimulator}
-                className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-indigo-800/60 hover:bg-indigo-700 text-indigo-200 border border-indigo-700 transition flex items-center gap-1.5"
-              >
-                <RotateCcw className="w-3 h-3" />
-                Reset
-              </button>
+            {simulatorActive && (
+              <>
+                <button
+                  type="button"
+                  onClick={handleSelectAllMissing}
+                  aria-label="Simulate acquiring all missing competencies"
+                  className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-indigo-800/60 hover:bg-indigo-700 text-indigo-200 border border-indigo-700 transition-colors flex items-center gap-1 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400"
+                >
+                  <Sparkles className="w-3 h-3 text-indigo-300" aria-hidden="true" />
+                  Select All Missing
+                </button>
+                {simulationResults.newlyAcquiredCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleResetSimulator}
+                    aria-label="Reset upskilling simulation"
+                    className="text-xs font-semibold px-3 py-1.5 rounded-xl bg-indigo-800/60 hover:bg-indigo-700 text-indigo-200 border border-indigo-700 transition-colors flex items-center gap-1.5 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-400"
+                  >
+                    <RotateCcw className="w-3 h-3" aria-hidden="true" />
+                    Reset
+                  </button>
+                )}
+              </>
             )}
             <button
               type="button"
               onClick={() => setSimulatorActive(!simulatorActive)}
-              className={`text-xs font-bold px-4 py-2 rounded-xl transition shadow-xs ${
+              aria-label={simulatorActive ? "Deactivate What-If simulator" : "Activate What-If simulator"}
+              className={`text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-2xs focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white ${
                 simulatorActive
                   ? "bg-emerald-500 text-white hover:bg-emerald-600"
                   : "bg-indigo-600 text-white hover:bg-indigo-500"

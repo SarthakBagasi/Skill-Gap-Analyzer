@@ -353,6 +353,50 @@ export default function HomePage() {
         </div>
       )}
 
+      {/* Pre-Analysis Deliverables Preview when analysis is not yet run */}
+      {!analysis && !isLoading && (
+        <section className="craft-card rounded-2xl p-6 sm:p-8 space-y-6" aria-label="Analysis Deliverables Preview">
+          <div className="border-b border-slate-100 pb-4">
+            <h3 className="text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-indigo-600" aria-hidden="true" />
+              Generated Assessment Deliverables
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Every analysis produces three explainable, audit-grade artifacts tailored to the candidate&rsquo;s target career profile:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-xs">
+            <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-2">
+              <span className="font-bold text-slate-900 block text-sm">
+                1. Role Gap Index (G) &amp; Gauge
+              </span>
+              <p className="text-slate-600 leading-relaxed [text-wrap:pretty]">
+                A mathematical metric measuring normalized competency deficit ($G \in [0.0, 1.0]$), with an interactive What-If Upskilling Simulator to forecast alignment gains.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-2">
+              <span className="font-bold text-slate-900 block text-sm">
+                2. Explainability Proximity Matrix
+              </span>
+              <p className="text-slate-600 leading-relaxed [text-wrap:pretty]">
+                Transparent audit log comparing exact token matches vs. Sentence-BERT cosine embeddings ($s_j \ge 0.65$), with candidate evidence snippets and evaluation rationales.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-2">
+              <span className="font-bold text-slate-900 block text-sm">
+                3. Prioritized Learning Roadmap
+              </span>
+              <p className="text-slate-600 leading-relaxed [text-wrap:pretty]">
+                Prerequisite-aware study sequence ranking foundation blockers first, complete with official documentation links, estimated hours, and hands-on portfolio milestones.
+              </p>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* How it Works / Methodology Section */}
       <section
         id="how-it-works"

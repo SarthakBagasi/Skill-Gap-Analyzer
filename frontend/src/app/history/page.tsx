@@ -148,6 +148,44 @@ export default function HistoryPage() {
         </div>
       </div>
 
+      {/* Quick Summary Stats Bar */}
+      {!isLoading && !error && historyItems.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="craft-card rounded-xl p-4 border border-slate-200">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+              Total Audits Persisted
+            </span>
+            <span className="text-xl font-mono font-black text-slate-900 tabular-nums">
+              {historyItems.length}
+            </span>
+          </div>
+          <div className="craft-card rounded-xl p-4 border border-slate-200">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+              Average Match Score
+            </span>
+            <span className="text-xl font-mono font-black text-indigo-600 tabular-nums">
+              {(historyItems.reduce((acc, i) => acc + i.overall_match_score, 0) / historyItems.length).toFixed(1)}%
+            </span>
+          </div>
+          <div className="craft-card rounded-xl p-4 border border-slate-200">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+              Average Gap Index (G)
+            </span>
+            <span className="text-xl font-mono font-black text-slate-900 tabular-nums">
+              {(historyItems.reduce((acc, i) => acc + i.gap_index, 0) / historyItems.length).toFixed(3)}
+            </span>
+          </div>
+          <div className="craft-card rounded-xl p-4 border border-slate-200">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider block">
+              Persistence Engine
+            </span>
+            <span className="text-xs font-mono font-bold text-slate-700 mt-1 block">
+              SQLAlchemy / DB
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* History Items Grid */}
       {isLoading ? (
         <div className="py-20 text-center" role="status" aria-live="polite">

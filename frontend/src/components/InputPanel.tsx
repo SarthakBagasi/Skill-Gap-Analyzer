@@ -227,46 +227,40 @@ export default function InputPanel({
   };
 
   return (
-    <div className="glass-panel rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl border border-slate-200/90 relative overflow-hidden">
-      {/* Decorative ambient gradient backdrop */}
-      <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-transparent blur-3xl pointer-events-none" />
-
+    <div className="craft-card rounded-2xl p-6 sm:p-8 lg:p-9 shadow-xs border border-slate-200">
       {/* Header section */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-8 border-b border-slate-200/80 gap-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between pb-6 mb-7 border-b border-slate-200 gap-4">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-semibold mb-2">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-            Decision-Support Analysis Studio
-          </div>
-          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">
-            Skill Assessment Workspace
+          <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
+            <Sparkles className="w-5 h-5 text-indigo-600 shrink-0" aria-hidden="true" />
+            Candidate Skill Assessment Workspace
           </h2>
-          <p className="text-xs text-slate-500 mt-1 max-w-xl">
-            Choose an interactive candidate persona for instant demonstration or supply your own resume to evaluate semantic skill alignment.
+          <p className="text-xs text-slate-500 mt-1 max-w-xl [text-wrap:pretty]">
+            Select a candidate persona for an immediate demonstration or supply your own resume to evaluate semantic competency alignment against industry standards.
           </p>
         </div>
 
         {/* Engine specs badge */}
-        <div className="hidden sm:flex items-center gap-3 bg-slate-100/80 border border-slate-200 px-3.5 py-2 rounded-2xl text-xs text-slate-600">
-          <Terminal className="w-4 h-4 text-indigo-600" />
+        <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200 px-3.5 py-2 rounded-xl text-xs text-slate-600 shrink-0">
+          <Terminal className="w-4 h-4 text-indigo-600" aria-hidden="true" />
           <span>
             Model: <strong className="font-mono text-slate-800">all-MiniLM-L6-v2</strong>
           </span>
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true" />
         </div>
       </div>
 
       {/* 1. Quick Persona Switcher Cards */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-3">
-          <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-            <User className="w-3.5 h-3.5 text-indigo-600" />
+          <span className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5" id="persona-selection-label">
+            <User className="w-3.5 h-3.5 text-indigo-600" aria-hidden="true" />
             Interactive Candidate Personas (One-Click Testing)
-          </label>
+          </span>
           <span className="text-[11px] text-slate-400">Click any card to auto-populate</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5" role="group" aria-labelledby="persona-selection-label">
           {PERSONAS.map((p) => {
             const Icon = p.icon;
             const isSelected = selectedPersonaId === p.id;
@@ -278,23 +272,23 @@ export default function InputPanel({
                 role="button"
                 aria-pressed={isSelected}
                 onClick={() => handleSelectPersona(p)}
-                className={`text-left p-4 rounded-xl border transition relative overflow-hidden group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 ${
+                className={`text-left p-4 rounded-xl border transition-colors relative group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2 ${
                   isSelected
-                    ? "bg-white border-indigo-600 shadow-sm ring-1 ring-indigo-600/20 translate-y-[-1px]"
-                    : "bg-white border-slate-200 hover:border-slate-300 shadow-xs hover:shadow-sm"
+                    ? "bg-indigo-50/30 border-indigo-600 shadow-xs ring-1 ring-indigo-600/30"
+                    : "bg-white border-slate-200 hover:border-slate-300 shadow-2xs"
                 }`}
               >
                 {/* Active check pill */}
                 {isSelected && (
                   <span className="absolute top-3 right-3 text-indigo-700 flex items-center gap-1 text-[10px] font-bold bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">
                     <CheckCircle2 className="w-3 h-3 text-indigo-600" aria-hidden="true" />
-                    Selected
+                    Active
                   </span>
                 )}
 
                 <div className="flex items-center gap-3 mb-2.5">
                   <div
-                    className={`w-9 h-9 rounded-lg bg-gradient-to-br ${p.color} text-white flex items-center justify-center shadow-xs shrink-0`}
+                    className="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs shrink-0"
                     aria-hidden="true"
                   >
                     <Icon className="w-4.5 h-4.5" />
@@ -309,7 +303,7 @@ export default function InputPanel({
                   </div>
                 </div>
 
-                <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">
+                <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed [text-wrap:pretty]">
                   {p.headline}
                 </p>
 
@@ -317,7 +311,7 @@ export default function InputPanel({
                   {p.skills.slice(0, 4).map((s, idx) => (
                     <span
                       key={idx}
-                      className="text-[10px] font-mono bg-slate-100 group-hover:bg-indigo-50 text-slate-700 group-hover:text-indigo-700 px-2 py-0.5 rounded-md transition"
+                      className="text-[10px] font-mono bg-slate-100 group-hover:bg-indigo-50 text-slate-700 group-hover:text-indigo-700 px-2 py-0.5 rounded-md transition-colors"
                     >
                       {s}
                     </span>
@@ -354,7 +348,7 @@ export default function InputPanel({
                 setSelectedPersonaId("");
               }}
               placeholder="e.g. Alex Johnson"
-              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition shadow-xs"
+              className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition-colors shadow-2xs"
               required
             />
           </div>
@@ -370,7 +364,7 @@ export default function InputPanel({
               <button
                 type="button"
                 onClick={() => setUseCustomJD(!useCustomJD)}
-                className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold transition flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 rounded"
+                className="text-xs text-indigo-600 hover:text-indigo-800 font-semibold transition-colors flex items-center gap-1 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 rounded"
               >
                 <Wand2 className="w-3 h-3" aria-hidden="true" />
                 {useCustomJD ? "Use Role Presets" : "+ Custom Job Description"}
@@ -385,7 +379,7 @@ export default function InputPanel({
                   onSelectRole(e.target.value);
                   setSelectedPersonaId("");
                 }}
-                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition shadow-xs"
+                className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm font-medium focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition-colors shadow-2xs"
               >
                 {roles.map((role) => (
                   <option key={role.id} value={role.id}>
@@ -421,7 +415,7 @@ export default function InputPanel({
               value={customJD}
               onChange={(e) => setCustomJD(e.target.value)}
               placeholder="e.g. We are seeking a Backend Engineer with hands-on experience in FastAPI, PostgreSQL, Docker, Redis caching, and Pytest unit testing…"
-              className="w-full p-4 bg-white border border-slate-200 rounded-xl text-xs font-mono focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition shadow-xs"
+              className="w-full p-4 bg-white border border-slate-200 rounded-xl text-xs font-mono focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition-colors shadow-2xs"
               required={useCustomJD}
             />
           </div>
@@ -433,13 +427,15 @@ export default function InputPanel({
             <span className="block text-xs font-bold text-slate-700 uppercase tracking-wider">
               Resume Ingestion Source
             </span>
-            <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-medium">
+            <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-medium" role="tablist" aria-label="Resume input format modes">
               <button
                 type="button"
+                role="tab"
+                aria-selected={inputMode === "text"}
                 onClick={() => setInputMode("text")}
-                className={`px-3.5 py-1.5 rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+                className={`px-3.5 py-1.5 rounded-lg transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                   inputMode === "text"
-                    ? "bg-white text-indigo-700 shadow-xs font-bold"
+                    ? "bg-white text-indigo-700 shadow-2xs font-bold"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -447,10 +443,12 @@ export default function InputPanel({
               </button>
               <button
                 type="button"
+                role="tab"
+                aria-selected={inputMode === "upload"}
                 onClick={() => setInputMode("upload")}
-                className={`px-3.5 py-1.5 rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+                className={`px-3.5 py-1.5 rounded-lg transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                   inputMode === "upload"
-                    ? "bg-white text-indigo-700 shadow-xs font-bold"
+                    ? "bg-white text-indigo-700 shadow-2xs font-bold"
                     : "text-slate-600 hover:text-slate-900"
                 }`}
               >
@@ -463,6 +461,9 @@ export default function InputPanel({
           {inputMode === "text" && (
             <div className="space-y-2">
               <div className="relative">
+                <label htmlFor="resume-text-input" className="sr-only">
+                  Paste resume or CV text
+                </label>
                 <textarea
                   id="resume-text-input"
                   rows={9}
@@ -472,7 +473,7 @@ export default function InputPanel({
                     setSelectedPersonaId("");
                   }}
                   placeholder="Paste candidate resume text or CV summary here…"
-                  className="w-full p-4 bg-white border border-slate-200 rounded-xl text-xs font-mono leading-relaxed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition shadow-xs"
+                  className="w-full p-4 bg-white border border-slate-200 rounded-xl text-xs font-mono leading-relaxed focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-1 transition-colors shadow-2xs"
                   required={inputMode === "text"}
                 />
 
@@ -485,7 +486,7 @@ export default function InputPanel({
                       setSelectedPersonaId("");
                     }}
                     aria-label="Clear resume text"
-                    className="p-1.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-500 rounded-lg text-xs transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+                    className="p-1.5 bg-slate-100 hover:bg-rose-50 hover:text-rose-600 text-slate-500 rounded-lg text-xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
                   >
                     <Eraser className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
@@ -496,17 +497,17 @@ export default function InputPanel({
               <div className="flex items-center justify-between text-[11px] text-slate-500 px-1">
                 <div className="flex items-center gap-3">
                   <span>
-                    Words: <strong className="text-slate-700 tabular-nums">{wordCount}</strong>
+                    Words: <strong className="text-slate-700 tabular-nums font-mono">{wordCount}</strong>
                   </span>
-                  <span aria-hidden="true">•</span>
+                  <span aria-hidden="true">&bull;</span>
                   <span>
-                    Chars: <strong className="text-slate-700 tabular-nums">{charCount}</strong>
+                    Chars: <strong className="text-slate-700 tabular-nums font-mono">{charCount}</strong>
                   </span>
-                  <span aria-hidden="true">•</span>
+                  <span aria-hidden="true">&bull;</span>
                   <span>Est. Read: ~{Math.ceil(wordCount / 200)}&nbsp;min</span>
                 </div>
                 <span className="text-indigo-600 font-medium">
-                  Tech symbols C++, C#, .NET preserved automatically
+                  Technical symbols C++, C#, .NET preserved automatically
                 </span>
               </div>
             </div>
@@ -542,20 +543,20 @@ export default function InputPanel({
                   onDragLeave={() => setIsDragOver(false)}
                   onDrop={handleDrop}
                   onClick={() => fileInputRef.current?.click()}
-                  className={`border-2 border-dashed rounded-2xl p-10 flex flex-col items-center justify-center cursor-pointer transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+                  className={`border-2 border-dashed rounded-xl p-10 flex flex-col items-center justify-center cursor-pointer transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
                     isDragOver
-                      ? "border-indigo-500 bg-indigo-50/50 scale-[1.01]"
+                      ? "border-indigo-500 bg-indigo-50/50"
                       : "border-slate-300 hover:border-indigo-400 bg-slate-50/50 hover:bg-indigo-50/20"
                   }`}
                 >
-                  <div className="w-14 h-14 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3 shadow-xs" aria-hidden="true">
+                  <div className="w-14 h-14 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3 shadow-2xs" aria-hidden="true">
                     <Upload className="w-7 h-7" />
                   </div>
                   <p className="text-sm font-bold text-slate-800">
                     Drag and drop resume here, or <span className="text-indigo-600 underline">browse files</span>
                   </p>
                   <p className="text-xs text-slate-500 mt-1.5">
-                    Supports high-fidelity parsing for PDF, DOCX, and TXT files
+                    Supports high-fidelity parsing for PDF, DOCX, and TXT files (up to 10&nbsp;MB)
                   </p>
 
                   <div className="flex items-center gap-2 mt-4">
@@ -571,9 +572,9 @@ export default function InputPanel({
                   </div>
                 </div>
               ) : (
-                <div className="bg-white border-2 border-indigo-200 rounded-xl p-5 flex items-center justify-between shadow-xs">
+                <div className="bg-white border-2 border-indigo-200 rounded-xl p-5 flex items-center justify-between shadow-2xs">
                   <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-xs" aria-hidden="true">
+                    <div className="w-12 h-12 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-2xs" aria-hidden="true">
                       <FileCode className="w-6 h-6" />
                     </div>
                     <div>
@@ -581,7 +582,7 @@ export default function InputPanel({
                         {selectedFile.name}
                       </p>
                       <p className="text-xs text-slate-500 mt-0.5">
-                        <span className="tabular-nums font-semibold">{(selectedFile.size / 1024).toFixed(1)}</span>&nbsp;KB • Document validated & ready for parsing
+                        <span className="tabular-nums font-mono font-semibold">{(selectedFile.size / 1024).toFixed(1)}</span>&nbsp;KB &bull; Document validated &amp; ready for parsing
                       </p>
                     </div>
                   </div>
@@ -590,7 +591,7 @@ export default function InputPanel({
                     <button
                       type="button"
                       onClick={() => fileInputRef.current?.click()}
-                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600"
+                      className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600"
                     >
                       Change
                     </button>
@@ -598,7 +599,7 @@ export default function InputPanel({
                       type="button"
                       onClick={handleRemoveFile}
                       aria-label="Remove uploaded file"
-                      className="p-1.5 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-lg transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-600"
+                      className="p-1.5 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-lg transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-rose-600"
                     >
                       <X className="w-5 h-5" aria-hidden="true" />
                     </button>
@@ -615,7 +616,7 @@ export default function InputPanel({
             type="submit"
             disabled={isLoading || (inputMode === "upload" && !selectedFile)}
             aria-busy={isLoading}
-            className="w-full relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md shadow-indigo-600/20 flex items-center justify-center gap-3 transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
+            className="w-full relative overflow-hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-xs flex items-center justify-center gap-3 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 focus-visible:ring-offset-2"
           >
             {isLoading ? (
               <div role="status" aria-live="polite" className="flex items-center gap-3">

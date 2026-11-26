@@ -61,15 +61,15 @@ export default function AnalyticsCharts({
         </div>
 
         {/* View switcher tabs */}
-        <div className="flex items-center bg-slate-100 p-1 rounded-lg border border-slate-200 text-xs font-semibold" role="tablist" aria-label="Analytics visual chart modes">
+        <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs font-semibold" role="tablist" aria-label="Analytics visual chart modes">
           <button
             type="button"
             role="tab"
             aria-selected={activeChartTab === "radar"}
             onClick={() => setActiveChartTab("radar")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
               activeChartTab === "radar"
-                ? "bg-white text-indigo-700 shadow-xs font-bold"
+                ? "bg-white text-indigo-700 shadow-2xs font-bold"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -81,9 +81,9 @@ export default function AnalyticsCharts({
             role="tab"
             aria-selected={activeChartTab === "spectrum"}
             onClick={() => setActiveChartTab("spectrum")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
               activeChartTab === "spectrum"
-                ? "bg-white text-indigo-700 shadow-xs font-bold"
+                ? "bg-white text-indigo-700 shadow-2xs font-bold"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
@@ -95,9 +95,9 @@ export default function AnalyticsCharts({
             role="tab"
             aria-selected={activeChartTab === "categories"}
             onClick={() => setActiveChartTab("categories")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-600 ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-indigo-600 ${
               activeChartTab === "categories"
-                ? "bg-white text-indigo-700 shadow-xs font-bold"
+                ? "bg-white text-indigo-700 shadow-2xs font-bold"
                 : "text-slate-600 hover:text-slate-900"
             }`}
           >
